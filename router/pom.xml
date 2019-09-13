@@ -58,7 +58,7 @@
 					<configuration>
 						<archive>
 							<manifest>
-								<mainClass>com.fixme.App</mainClass>
+								<mainClass>com.fixme.Router</mainClass>
 							</manifest>
 						</archive>
 					</configuration>
