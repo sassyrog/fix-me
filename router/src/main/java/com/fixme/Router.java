@@ -19,12 +19,13 @@ import java.util.Iterator;
  */
 public class Router {
 
-	private int ports[] = new int[] { 5000, 5001 };
+	private int port = 5000;
+	// private int ports[] = new int[] { 5000, 5001 };
 
 	public static void main(String[] args) {
 		// MysqlConnect conn = MysqlConnect.getDbCon();
-		// Router server = new Router();
-		// server.startServer();
+		Router server = new Router();
+		server.startServer();
 	}
 
 	public void startServer() {
@@ -32,14 +33,14 @@ public class Router {
 		try {
 			Selector selector = Selector.open();
 
-			for (int port : ports) {
-				ServerSocketChannel ssChannel = ServerSocketChannel.open();
-				ssChannel.configureBlocking(false);
-				ServerSocket sSocket = ssChannel.socket();
-				sSocket.bind(new InetSocketAddress(port));
-				ssChannel.register(selector, SelectionKey.OP_ACCEPT);
+			// for (int port : ports) {
+			ServerSocketChannel ssChannel = ServerSocketChannel.open();
+			ssChannel.configureBlocking(false);
+			ServerSocket sSocket = ssChannel.socket();
+			sSocket.bind(new InetSocketAddress(port));
+			ssChannel.register(selector, SelectionKey.OP_ACCEPT);
 
-			}
+			// }
 
 			while (true) {
 				System.out.println("waiting for client connection");
