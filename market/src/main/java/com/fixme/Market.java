@@ -3,7 +3,7 @@ package com.fixme;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.channels.*;
+import java.nio.channels.SocketChannel;
 import java.util.ArrayList;
 
 /**
@@ -12,81 +12,38 @@ import java.util.ArrayList;
  */
 public class Market {
 
-    public void startClient() throws IOException, InterruptedException {
+    public static void main(String[] args) throws IOException, InterruptedException {
 
-        InetSocketAddress hostAddress = new InetSocketAddress("localhost", 9093);
-        SocketChannel client = SocketChannel.open(hostAddress);
+        InetSocketAddress crunchifyAddr = new InetSocketAddress("localhost", 1111);
+        SocketChannel crunchifyClient = SocketChannel.open(crunchifyAddr);
 
-        System.out.println("Client... started");
+        log("Connecting to Server on port 1111...");
 
-        String threadName = Thread.currentThread().getName();
+        ArrayList<String> companyDetails = new ArrayList<String>();
 
-        // Send messages to server
-        String[] messages = new String[] { threadName + ": msg1", threadName + ": msg2", threadName + ": msg3" };
+        // create a ArrayList with companyName list
+        companyDetails.add("Facebook");
+        companyDetails.add("Twitter");
+        companyDetails.add("IBM");
+        companyDetails.add("Google");
+        companyDetails.add("Crunchify");
 
-        for (int i = 0; i < messages.length; i++) {
-            ByteBuffer buffer = ByteBuffer.allocate(74);
-            buffer.put(messages[i].getBytes());
-            buffer.flip();
-            client.write(buffer);
-            System.out.println(messages[i]);
+        for (String companyName : companyDetails) {
+
+            byte[] message = new String(companyName).getBytes();
+            ByteBuffer buffer = ByteBuffer.wrap(message);
+            crunchifyClient.write(buffer);
+
+            log("sending: " + companyName);
             buffer.clear();
-            Thread.sleep(5000);
+
+            // wait for 2 seconds before sending next message
+            Thread.sleep(2000);
         }
-        client.close();
+        crunchifyClient.close();
     }
 
-    public static void main(String[] args) {
-        Runnable client = new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    new Market().startClient();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        };
-        new Thread(client, "client-A").start();
-        new Thread(client, "client-B").start();
+    private static void log(String str) {
+        System.out.println(str);
     }
-
-    // public static void main(String[] args) throws IOException,
-    // InterruptedException {
-
-    // InetSocketAddress crunchifyAddr = new InetSocketAddress("localhost", 5000);
-    // SocketChannel crunchifyClient = SocketChannel.open(crunchifyAddr);
-
-    // log("Connecting to Server on port 5000...");
-
-    // ArrayList<String> companyDetails = new ArrayList<String>();
-
-    // // create a ArrayList with companyName list
-    // companyDetails.add("Facebook");
-    // companyDetails.add("Twitter");
-    // companyDetails.add("IBM");
-    // companyDetails.add("Google");
-    // companyDetails.add("Crunchify");
-
-    // for (String companyName : companyDetails) {
-
-    // byte[] message = new String(companyName).getBytes();
-    // ByteBuffer buffer = ByteBuffer.wrap(message);
-    // crunchifyClient.write(buffer);
-
-    // log("sending: " + companyName);
-    // buffer.clear();
-
-    // // wait for 2 seconds before sending next message
-    // Thread.sleep(2000);
-    // }
-    // crunchifyClient.close();
-    // }
-
-    // private static void log(String str) {
-    // System.out.println(str);
-    // }
 }
