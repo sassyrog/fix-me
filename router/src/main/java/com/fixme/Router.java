@@ -2,14 +2,14 @@ package com.fixme;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.ServerSocket;
 import java.nio.ByteBuffer;
-import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.nio.charset.Charset;
 import java.util.Iterator;
-import java.util.Set;
 
 /**
  * Hello world!
@@ -17,75 +17,95 @@ import java.util.Set;
  */
 public class Router {
 
-	@SuppressWarnings("unused")
-	public static void main(String[] args) throws IOException {
+	private int port = 5000;
 
-		// Selector: multiplexor of SelectableChannel objects
-		Selector selector = Selector.open(); // selector is open here
+	public static void main(String[] args) {
+		Router server = new Router();
+		server.startServer();
+	}
 
-		// ServerSocketChannel: selectable channel for stream-oriented listening sockets
-		ServerSocketChannel crunchifySocket = ServerSocketChannel.open();
-		InetSocketAddress crunchifyAddr = new InetSocketAddress("localhost", 1111);
+	public void startServer() {
 
-		// Binds the channel's socket to a local address and configures the socket to
-		// listen for connections
-		crunchifySocket.bind(crunchifyAddr);
+		try {
+			Selector selector = Selector.open();
 
-		// Adjusts this channel's blocking mode.
-		crunchifySocket.configureBlocking(false);
+			ServerSocketChannel ssc = ServerSocketChannel.open();
+			ssc.configureBlocking(false);
 
-		int ops = crunchifySocket.validOps();
-		SelectionKey selectKy = crunchifySocket.register(selector, ops, null);
+			ServerSocket ss = ssc.socket();
+			ss.bind(new InetSocketAddress(port));
 
-		// Infinite loop..
-		// Keep server running
-		while (true) {
+			ssc.register(selector, SelectionKey.OP_ACCEPT);
 
-			log("i'm a server and i'm waiting for new connection and buffer select...");
-			// Selects a set of keys whose corresponding channels are ready for I/O
-			// operations
-			selector.select();
-
-			// token representing the registration of a SelectableChannel with a Selector
-			Set<SelectionKey> crunchifyKeys = selector.selectedKeys();
-			Iterator<SelectionKey> crunchifyIterator = crunchifyKeys.iterator();
-
-			while (crunchifyIterator.hasNext()) {
-				SelectionKey myKey = crunchifyIterator.next();
-
-				// Tests whether this key's channel is ready to accept a new socket connection
-				if (myKey.isAcceptable()) {
-					SocketChannel crunchifyClient = crunchifySocket.accept();
-
-					// Adjusts this channel's blocking mode to false
-					crunchifyClient.configureBlocking(false);
-
-					// Operation-set bit for read operations
-					crunchifyClient.register(selector, SelectionKey.OP_READ);
-					log("Connection Accepted: " + crunchifyClient.getLocalAddress() + "\n");
-
-					// Tests whether this key's channel is ready for reading
-				} else if (myKey.isReadable()) {
-
-					SocketChannel crunchifyClient = (SocketChannel) myKey.channel();
-					ByteBuffer crunchifyBuffer = ByteBuffer.allocate(256);
-					crunchifyClient.read(crunchifyBuffer);
-					String result = new String(crunchifyBuffer.array()).trim();
-
-					log("Message received: " + result);
-
-					if (result.equals("Crunchify")) {
-						crunchifyClient.close();
-						log("\nIt's time to close connection as we got last company name 'Crunchify'");
-						log("\nServer will keep running. Try running client again to establish new connection");
-					}
+			while (true) {
+				System.out.println("waiting for client connection");
+				if (selector.select() > 0) {
+					performIO(selector);
 				}
-				crunchifyIterator.remove();
 			}
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
-	private static void log(String str) {
-		System.out.println(str);
+	public void performIO(Selector s) {
+		Iterator<SelectionKey> i = s.selectedKeys().iterator();
+
+		while (i.hasNext()) {
+			try {
+				SelectionKey sk = i.next();
+				if (sk.isAcceptable()) {
+					System.out.println("accept client connection");
+					acceptConnection(sk, s);
+				} else if (sk.isReadable()) {
+					System.out.println("read from client");
+					readWriteClient(sk);
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+			i.remove();
+		}
+	}
+
+	public void acceptConnection(SelectionKey sk, Selector s) throws IOException {
+		ServerSocketChannel server = (ServerSocketChannel) sk.channel();
+		SocketChannel sChannel = server.accept();
+
+		sChannel.configureBlocking(false);
+		sChannel.register(s, SelectionKey.OP_READ);
+	}
+
+	public void readWriteClient(SelectionKey sk) throws IOException {
+		SocketChannel schannel = (SocketChannel) sk.channel();
+		ByteBuffer bb = ByteBuffer.allocate(1000);
+
+		bb.flip();
+		bb.clear();
+
+		int count = schannel.read(bb);
+		if (count > 0) {
+			bb.flip();
+			String input = Charset.forName("UTF-8").decode(bb).toString();
+			System.out.println(input);
+
+			bb.flip();
+			bb.clear();
+			bb.put(processClientRequest(input).getBytes());
+			bb.flip();
+			bb.rewind();
+			schannel.write(bb);
+
+			schannel.close();
+		}
+	}
+
+	public String processClientRequest(String input) {
+		if (input.startsWith("deals")) {
+			return "upto 20% off on fashion";
+		} else {
+			return "invalid request";
+		}
 	}
 }
