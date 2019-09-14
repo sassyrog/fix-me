@@ -17,7 +17,7 @@ import java.util.Iterator;
  */
 public class Router {
 
-	private int port = 5000;
+	private int ports[] = new int[] { 5000, 5001 };
 
 	public static void main(String[] args) {
 		Router server = new Router();
@@ -29,13 +29,14 @@ public class Router {
 		try {
 			Selector selector = Selector.open();
 
-			ServerSocketChannel ssc = ServerSocketChannel.open();
-			ssc.configureBlocking(false);
+			for (int port : ports) {
+				ServerSocketChannel ssChannel = ServerSocketChannel.open();
+				ssChannel.configureBlocking(false);
+				ServerSocket sSocket = ssChannel.socket();
+				sSocket.bind(new InetSocketAddress(port));
+				ssChannel.register(selector, SelectionKey.OP_ACCEPT);
 
-			ServerSocket ss = ssc.socket();
-			ss.bind(new InetSocketAddress(port));
-
-			ssc.register(selector, SelectionKey.OP_ACCEPT);
+			}
 
 			while (true) {
 				System.out.println("waiting for client connection");
@@ -49,11 +50,11 @@ public class Router {
 	}
 
 	public void performIO(Selector s) {
-		Iterator<SelectionKey> i = s.selectedKeys().iterator();
+		Iterator<SelectionKey> skIterator = s.selectedKeys().iterator();
 
-		while (i.hasNext()) {
+		while (skIterator.hasNext()) {
 			try {
-				SelectionKey sk = i.next();
+				SelectionKey sk = skIterator.next();
 				if (sk.isAcceptable()) {
 					System.out.println("accept client connection");
 					acceptConnection(sk, s);
@@ -65,7 +66,7 @@ public class Router {
 				e.printStackTrace();
 			}
 
-			i.remove();
+			skIterator.remove();
 		}
 	}
 

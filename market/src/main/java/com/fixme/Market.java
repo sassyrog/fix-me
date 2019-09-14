@@ -15,13 +15,13 @@ import java.util.Iterator;
  */
 public class Market {
 
-    private int port = 5000;
+    private int port = 5001;
     private String hostName = "localhost";
     private ByteBuffer bb = ByteBuffer.allocate(1000);
 
     public static void main(String[] args) {
         Market client = new Market();
-        client.getResponseFromServer("deals");
+        client.getResponseFromServer("ff");
         Market client2 = new Market();
         client2.getResponseFromServer("deals");
     }
