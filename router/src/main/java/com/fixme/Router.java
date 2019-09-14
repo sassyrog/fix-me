@@ -9,7 +9,12 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
+import java.sql.DriverManager;
 import java.util.Iterator;
+
+import com.mysql.jdbc.Connection;
+
+import com.fixme.controlers.MysqlConnect;
 
 /**
  * Hello world!
@@ -20,8 +25,9 @@ public class Router {
 	private int ports[] = new int[] { 5000, 5001 };
 
 	public static void main(String[] args) {
-		Router server = new Router();
-		server.startServer();
+		MysqlConnect conn = MysqlConnect.getDbCon();
+		// Router server = new Router();
+		// server.startServer();
 	}
 
 	public void startServer() {
