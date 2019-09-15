@@ -54,7 +54,7 @@
 					<configuration>
 						<archive>
 							<manifest>
-								<mainClass>com.fixme.App</mainClass>
+								<mainClass>com.fixme.Broker</mainClass>
 							</manifest>
 						</archive>
 					</configuration>
