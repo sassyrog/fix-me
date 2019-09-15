@@ -1,5 +1,10 @@
 package com.fixme;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 // import java.io.IOException;
 // import java.net.InetSocketAddress;
 // import java.nio.ByteBuffer;
@@ -19,8 +24,30 @@ public class Broker {
     public static void main(String[] args) {
         Scanner scn = new Scanner(System.in);
 
-        System.out.println("Please enter something");
-        scn.nextLine();
+        try {
+            File file = new File(".brocker_details");
+            // File details = new File("simulation.txt");
+            BufferedReader b = new BufferedReader(new FileReader(file));
+
+            String username = b.readLine().trim();
+            String password = b.readLine().trim();
+
+            b.close();
+        } catch (IOException e) {
+
+            String choice = "";
+            while (!choice.equals("sign-up") && !choice.equals("login")) {
+                System.out.print("Would you like to sign up or login (sign-up|login)");
+                choice = scn.nextLine().trim();
+            }
+
+            if (choice.equals("sign-up")) {
+                System.out.print("username : ");
+                String username = scn.nextLine().trim();
+                System.out.print("password : ");
+                String password = scn.nextLine();
+            }
+        }
         scn.close();
     }
     // private int port = 5000;
