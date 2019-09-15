@@ -13,6 +13,7 @@ public class TimeMessage {
 		DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
 
 		String formattedDate = lTime.format(myFormatObj);
-		System.out.println("[" + formattedDate + "]");
+		System.out.print("\u001B[1;37m[\u001B[1;36m" + formattedDate + "\u001B[1;37m]\u001B[1;0m");
+		System.out.println(" " + msg);
 	}
 }
