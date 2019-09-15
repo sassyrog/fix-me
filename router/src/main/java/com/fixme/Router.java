@@ -1,6 +1,7 @@
 package com.fixme;
 
 import com.fixme.controlers.RouterServer;
+import com.fixme.controlers.TimeMessage;
 
 // import com.fixme.controlers.MysqlConnect;
 
@@ -11,6 +12,7 @@ import com.fixme.controlers.RouterServer;
 public class Router {
 
 	public static void main(String[] args) {
+		TimeMessage.print("Hello");
 		// MysqlConnect conn = MysqlConnect.getDbCon();
 		RouterServer rServer = new RouterServer();
 		rServer.newRouterServer();
