@@ -15,7 +15,7 @@ import java.util.Iterator;
  */
 public class Market {
 
-    private int port = 5001;
+    private int port = 5000;
     private String hostName = "localhost";
     private ByteBuffer bb = ByteBuffer.allocate(1000);
 
