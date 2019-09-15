@@ -58,13 +58,13 @@ public class Router {
 
 		while (skIterator.hasNext()) {
 			try {
-				SelectionKey sk = skIterator.next();
-				if (sk.isAcceptable()) {
+				SelectionKey sKey = skIterator.next();
+				if (sKey.isAcceptable()) {
 					System.out.println("accept client connection");
-					acceptConnection(sk, s);
-				} else if (sk.isReadable()) {
+					acceptConnection(sKey, s);
+				} else if (sKey.isReadable()) {
 					System.out.println("read from client");
-					readWriteClient(sk);
+					readWriteClient(sKey);
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -74,35 +74,36 @@ public class Router {
 		}
 	}
 
-	public void acceptConnection(SelectionKey sk, Selector s) throws IOException {
-		ServerSocketChannel server = (ServerSocketChannel) sk.channel();
-		SocketChannel sChannel = server.accept();
+	public void acceptConnection(SelectionKey sKey, Selector s) throws IOException {
+		ServerSocketChannel ssChannel = (ServerSocketChannel) sKey.channel();
+		SocketChannel sChannel = ssChannel.accept();
 
+		System.out.println("IP : " + ssChannel.socket().getLocalPort());
 		sChannel.configureBlocking(false);
 		sChannel.register(s, SelectionKey.OP_READ);
 	}
 
-	public void readWriteClient(SelectionKey sk) throws IOException {
-		SocketChannel schannel = (SocketChannel) sk.channel();
-		ByteBuffer bb = ByteBuffer.allocate(1000);
+	public void readWriteClient(SelectionKey sKey) throws IOException {
+		SocketChannel sChannel = (SocketChannel) sKey.channel();
+		ByteBuffer cBuffer = ByteBuffer.allocate(1000);
 
-		bb.flip();
-		bb.clear();
+		cBuffer.flip();
+		cBuffer.clear();
 
-		int count = schannel.read(bb);
+		int count = sChannel.read(cBuffer);
 		if (count > 0) {
-			bb.flip();
-			String input = Charset.forName("UTF-8").decode(bb).toString();
+			cBuffer.flip();
+			String input = Charset.forName("UTF-8").decode(cBuffer).toString();
 			System.out.println(input);
 
-			bb.flip();
-			bb.clear();
-			bb.put(processClientRequest(input).getBytes());
-			bb.flip();
-			bb.rewind();
-			schannel.write(bb);
+			cBuffer.flip();
+			cBuffer.clear();
+			cBuffer.put(processClientRequest(input).getBytes());
+			cBuffer.flip();
+			cBuffer.rewind();
+			sChannel.write(cBuffer);
 
-			schannel.close();
+			sChannel.close();
 		}
 	}
 
