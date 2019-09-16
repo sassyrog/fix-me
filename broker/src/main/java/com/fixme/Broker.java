@@ -54,7 +54,7 @@ public class Broker {
                 String password = scn.nextLine();
 
                 try {
-                    ResultSet rSet = conn.query("SELECT 1 FROM fixme WHERE br_name = LOWER(" + username + ")");
+                    ResultSet rSet = conn.query("SELECT 1 FROM brokers WHERE br_name = '" + username + "'");
                 } catch (SQLException sqle) {
                     sqle.printStackTrace();
                     // TODO: handle exception
