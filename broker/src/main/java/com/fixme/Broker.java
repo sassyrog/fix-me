@@ -37,7 +37,7 @@ public class Broker {
 
             String choice = "";
             while (!choice.equals("sign-up") && !choice.equals("login")) {
-                System.out.print("Would you like to sign up or login (sign-up|login)");
+                System.out.print("Would you like to sign up or login (sign-up|login): ");
                 choice = scn.nextLine().trim();
             }
 
