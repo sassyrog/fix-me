@@ -42,8 +42,7 @@ CREATE TABLE `brokers` (
 --
 -- Indexes for table `brokers`
 --
-ALTER TABLE `brokers`
-  ADD PRIMARY KEY (`br_id`);
+ALTER TABLE `brokers` ADD PRIMARY KEY (`br_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -52,8 +51,7 @@ ALTER TABLE `brokers`
 --
 -- AUTO_INCREMENT for table `brokers`
 --
-ALTER TABLE `brokers`
-  MODIFY `br_id` bigint(20) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `brokers` MODIFY `br_id` bigint(20) NOT NULL AUTO_INCREMENT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
