@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 // import java.io.IOException;
 // import java.net.InetSocketAddress;
 // import java.nio.ByteBuffer;
@@ -14,11 +16,14 @@ import java.io.IOException;
 // import java.util.Iterator;
 import java.util.Scanner;
 
+import com.fixme.controlers.MysqlConnect;
+
 /**
  * Hello world!
  *
  */
 public class Broker {
+    static private MysqlConnect conn = MysqlConnect.getDbCon();
 
     public static void main(String[] args) {
         Scanner scn = new Scanner(System.in);
@@ -41,10 +46,19 @@ public class Broker {
             }
 
             if (choice.equals("s")) {
+                System.out.print("Broker Name : ");
+                String name = scn.nextLine().trim();
                 System.out.print("username : ");
                 String username = scn.nextLine().trim();
                 System.out.print("password : ");
                 String password = scn.nextLine();
+
+                try {
+                    ResultSet rSet = conn.query("SELECT 1 FROM fixme WHERE br_name = LOWER(" + username + ")");
+                } catch (SQLException sqle) {
+                    sqle.printStackTrace();
+                    // TODO: handle exception
+                }
             }
         }
         scn.close();
