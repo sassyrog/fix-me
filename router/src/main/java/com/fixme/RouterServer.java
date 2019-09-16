@@ -1,4 +1,4 @@
-package com.fixme.controlers;
+package com.fixme;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;

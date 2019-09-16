@@ -2,7 +2,6 @@ package com.fixme;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 // import java.io.IOException;
@@ -36,12 +35,12 @@ public class Broker {
         } catch (IOException e) {
 
             String choice = "";
-            while (!choice.equals("sign-up") && !choice.equals("login")) {
-                System.out.print("Would you like to sign up or login (sign-up|login): ");
+            while (!choice.equals("s") && !choice.equals("l")) {
+                System.out.print("Would you like to sign up or login (s|l): ");
                 choice = scn.nextLine().trim();
             }
 
-            if (choice.equals("sign-up")) {
+            if (choice.equals("s")) {
                 System.out.print("username : ");
                 String username = scn.nextLine().trim();
                 System.out.print("password : ");
