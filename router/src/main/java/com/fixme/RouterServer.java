@@ -16,6 +16,7 @@ import java.util.Iterator;
  */
 public class RouterServer {
 	private int ports[] = new int[] { 5000, 5001 };
+	private SocketChannel marketChannel;
 
 	public RouterServer() {
 	}
@@ -71,6 +72,7 @@ public class RouterServer {
 
 		sChannel.configureBlocking(false);
 		sChannel.register(s, SelectionKey.OP_READ);
+		System.out.println("Connection from Market is got!!!");
 	}
 
 	public void readWriteClient(SelectionKey sKey) throws IOException {
