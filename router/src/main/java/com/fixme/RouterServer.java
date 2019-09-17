@@ -52,7 +52,7 @@ public class RouterServer {
 				SelectionKey sKey = skIterator.next();
 				if (sKey.isAcceptable()) {
 					acceptConnection(sKey, s);
-				} else if (sKey.isReadable()) {
+				} else if (sKey.isWritable()) {
 					/*
 					 * some logic for IP lookup to go here
 					 */
@@ -68,11 +68,19 @@ public class RouterServer {
 
 	public void acceptConnection(SelectionKey sKey, Selector s) throws IOException {
 		ServerSocketChannel ssChannel = (ServerSocketChannel) sKey.channel();
-		this.marketChannel = ssChannel.accept();
+		SocketChannel sChannel = ssChannel.accept();
 
-		this.marketChannel.configureBlocking(false);
-		this.marketChannel.register(s, SelectionKey.OP_READ);
-		System.out.println("Connection from Market is got!!!");
+		switch (sChannel.socket().getLocalPort()) {
+		case 5000:
+			System.out.println("Connection from Market is got!!!");
+			this.marketChannel = sChannel;
+			this.marketChannel.configureBlocking(false);
+			this.marketChannel.register(s, SelectionKey.OP_WRITE);
+			break;
+		case 5001:
+			/* some broker logic */
+			break;
+		}
 	}
 
 	public void readWriteClient(SelectionKey sKey) throws IOException {
