@@ -52,10 +52,7 @@ public class RouterServer {
 				SelectionKey sKey = skIterator.next();
 				if (sKey.isAcceptable()) {
 					acceptConnection(sKey, s);
-				} else if (sKey.isWritable()) {
-					/*
-					 * some logic for IP lookup to go here
-					 */
+				} else if (sKey.isReadable()) {
 					readWriteClient(sKey);
 				}
 			} catch (IOException e) {
