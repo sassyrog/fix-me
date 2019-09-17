@@ -68,21 +68,22 @@ public class RouterServer {
 
 	public void acceptConnection(SelectionKey sKey, Selector s) throws IOException {
 		ServerSocketChannel ssChannel = (ServerSocketChannel) sKey.channel();
-		SocketChannel sChannel = ssChannel.accept();
+		this.marketChannel = ssChannel.accept();
 
-		sChannel.configureBlocking(false);
-		sChannel.register(s, SelectionKey.OP_READ);
+		this.marketChannel.configureBlocking(false);
+		this.marketChannel.register(s, SelectionKey.OP_READ);
 		System.out.println("Connection from Market is got!!!");
+		this.broadcast("Shit");
 	}
 
 	public void readWriteClient(SelectionKey sKey) throws IOException {
-		SocketChannel sChannel = (SocketChannel) sKey.channel();
+		this.marketChannel = (SocketChannel) sKey.channel();
 		ByteBuffer cBuffer = ByteBuffer.allocate(1000);
 
 		cBuffer.flip();
 		cBuffer.clear();
 
-		int count = sChannel.read(cBuffer);
+		int count = this.marketChannel.read(cBuffer);
 		if (count > 0) {
 			cBuffer.flip();
 			String input = Charset.forName("UTF-8").decode(cBuffer).toString();
@@ -93,10 +94,18 @@ public class RouterServer {
 			cBuffer.put(processClientRequest(input).getBytes());
 			cBuffer.flip();
 			cBuffer.rewind();
-			sChannel.write(cBuffer);
-
-			sChannel.close();
+			this.marketChannel.write(cBuffer);
+			this.marketChannel.close();
 		}
+	}
+
+	public void broadcast(String msg) throws IOException {
+		ByteBuffer bb = ByteBuffer.allocate(1000);
+		bb.flip();
+		bb.clear();
+		bb.put(msg.getBytes());
+		bb.flip();
+		this.marketChannel.write(bb);
 	}
 
 	public String processClientRequest(String input) {
