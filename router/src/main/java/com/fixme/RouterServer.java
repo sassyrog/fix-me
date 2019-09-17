@@ -73,7 +73,6 @@ public class RouterServer {
 		this.marketChannel.configureBlocking(false);
 		this.marketChannel.register(s, SelectionKey.OP_READ);
 		System.out.println("Connection from Market is got!!!");
-		this.broadcast("Shit");
 	}
 
 	public void readWriteClient(SelectionKey sKey) throws IOException {
