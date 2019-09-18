@@ -17,6 +17,7 @@ import java.util.Iterator;
 public class RouterServer {
 	private int ports[] = new int[] { 5000, 5001 };
 	private SocketChannel marketChannel;
+	private SocketChannel brokerChannel;
 
 	public RouterServer() {
 	}
@@ -52,7 +53,7 @@ public class RouterServer {
 				SelectionKey sKey = skIterator.next();
 				if (sKey.isAcceptable()) {
 					acceptConnection(sKey, s);
-				} else if (sKey.isReadable()) {
+				} else if (sKey.isWritable()) {
 					readWriteClient(sKey);
 				}
 			} catch (IOException e) {
@@ -72,47 +73,59 @@ public class RouterServer {
 			System.out.println("Connection from Market is got!!!");
 			this.marketChannel = sChannel;
 			this.marketChannel.configureBlocking(false);
-			this.marketChannel.register(s, SelectionKey.OP_WRITE);
+			this.marketChannel.register(s, SelectionKey.OP_READ);
 			break;
 		case 5001:
-			/* some broker logic */
+			System.out.println("Connection from Broker is got!!!");
+			this.brokerChannel = sChannel;
+			this.brokerChannel.configureBlocking(false);
+			this.brokerChannel.register(s, SelectionKey.OP_READ);
 			break;
 		}
 	}
 
 	public void readWriteClient(SelectionKey sKey) throws IOException {
-		this.marketChannel = (SocketChannel) sKey.channel();
-		ByteBuffer cBuffer = ByteBuffer.allocate(1000);
 
-		cBuffer.flip();
-		cBuffer.clear();
+		// this.marketChannel = (SocketChannel) sKey.channel();
+		// ByteBuffer cBuffer = ByteBuffer.allocate(1000);
 
-		int count = this.marketChannel.read(cBuffer);
-		if (count > 0) {
-			cBuffer.flip();
-			String input = Charset.forName("UTF-8").decode(cBuffer).toString();
-			System.out.println(input);
+		// cBuffer.flip();
+		// cBuffer.clear();
 
-			cBuffer.flip();
-			cBuffer.clear();
-			cBuffer.put(processClientRequest(input).getBytes());
-			cBuffer.flip();
-			cBuffer.rewind();
-			this.marketChannel.write(cBuffer);
-			this.marketChannel.close();
-		}
+		// int count = this.marketChannel.read(cBuffer);
+		// if (count > 0) {
+		// cBuffer.flip();
+		// String input = Charset.forName("UTF-8").decode(cBuffer).toString();
+		// System.out.println(input);
+
+		// cBuffer.flip();
+		// cBuffer.clear();
+		// cBuffer.put(processClientRequest(input).getBytes());
+		// cBuffer.flip();
+		// cBuffer.rewind();
+		// this.marketChannel.write(cBuffer);
+		// this.marketChannel.close();
+		// }
 	}
 
-	public void broadcast(String msg) throws IOException {
+	public void broadcast(String msg, SocketChannel channel) throws IOException {
 		ByteBuffer bb = ByteBuffer.allocate(1000);
 		bb.flip();
 		bb.clear();
 		bb.put(msg.getBytes());
 		bb.flip();
-		this.marketChannel.write(bb);
+		channel.write(bb);
 	}
 
 	public String processClientRequest(String input) {
 		return "Some response to go here";
+	}
+
+	public SocketChannel getMarketChannel() {
+		return this.marketChannel;
+	}
+
+	public SocketChannel getBrokerChannel() {
+		return this.brokerChannel;
 	}
 }
