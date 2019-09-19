@@ -122,14 +122,14 @@ public class RouterServer {
 	// Problem might be here 2
 
 	public void processMarketToBroker(ByteBuffer cBuffer) throws IOException {
-		String clientString;
+		String clientString = "00000000";
+		System.out.println("M to B ++++> " + clientString);
 		if (this.brokerChannel.isConnected()) {
 			int count = this.marketChannel.read(cBuffer);
 			if (count > 0) {
 				cBuffer.flip();
 				clientString = Charset.forName("UTF-8").decode(cBuffer).toString();
-				System.out.println("M to B ++++> " + clientString);
-				// this.broadcast(clientString, this.marketChannel);
+				// this.broadcast(clientString, this.brokerChannel);
 
 				// cBuffer.flip();
 				// cBuffer.clear();
