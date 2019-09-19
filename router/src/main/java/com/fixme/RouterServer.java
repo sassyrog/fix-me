@@ -97,6 +97,7 @@ public class RouterServer {
 			this.marketChannel.register(s, SelectionKey.OP_WRITE);
 			break;
 		case 5001:
+			System.out.println("----here----");
 			processMarketToBroker(cBuffer);
 			this.brokerChannel.register(s, SelectionKey.OP_WRITE);
 			break;
