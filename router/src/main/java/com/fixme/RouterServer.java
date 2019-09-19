@@ -103,6 +103,8 @@ public class RouterServer {
 
 	}
 
+	// Problem might be here
+
 	public void processBrokerToMarket(ByteBuffer cBuffer) throws IOException {
 		String clientString;
 		if (this.marketChannel.isConnected()) {
