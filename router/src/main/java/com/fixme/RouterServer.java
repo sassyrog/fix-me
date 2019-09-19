@@ -70,12 +70,12 @@ public class RouterServer {
 
 		switch (sChannel.socket().getLocalPort()) {
 		case 5000:
-			System.out.println("Connection from Market is got!!!");
+			System.out.println("Connection from Broker is got!!!");
 			sChannel.configureBlocking(false);
 			sChannel.register(s, SelectionKey.OP_READ);
 			break;
 		case 5001:
-			System.out.println("Connection from Broker is got!!!");
+			System.out.println("Connection from Market is got!!!");
 			sChannel.configureBlocking(false);
 			sChannel.register(s, SelectionKey.OP_READ);
 			break;
@@ -85,33 +85,44 @@ public class RouterServer {
 	public void readWriteClient(SelectionKey sKey, Selector s) throws IOException {
 		SocketChannel sChannel = (SocketChannel) sKey.channel();
 		ByteBuffer cBuffer = ByteBuffer.allocate(1000);
-		String clientString;
 		cBuffer.flip();
 		cBuffer.clear();
 
-		int count = this.marketChannel.read(cBuffer);
-		if (count > 0) {
-			cBuffer.flip();
-			String input = Charset.forName("UTF-8").decode(cBuffer).toString();
-			System.out.println(input);
-
-			cBuffer.flip();
-			cBuffer.clear();
-			// cBuffer.put(processClientRequest(input).getBytes());
-			cBuffer.flip();
-			cBuffer.rewind();
-			this.marketChannel.write(cBuffer);
-			this.marketChannel.close();
-		}
 		switch (sChannel.socket().getLocalPort()) {
 		case 5000:
-			sChannel.register(s, SelectionKey.OP_READ);
+			processBrokerToMarket(cBuffer);
+			this.marketChannel.register(s, SelectionKey.OP_READ);
 			break;
 		case 5001:
+			processMarketToBroker();
 			this.brokerChannel.register(s, SelectionKey.OP_READ);
 			break;
 		}
 
+	}
+
+	public void processBrokerToMarket(ByteBuffer cBuffer) {
+		String clientString;
+		if (this.marketChannel.isConnected()) {
+
+			// int count = this.marketChannel.read(cBuffer);
+			// if (count > 0) {
+			// cBuffer.flip();
+			// clientString = Charset.forName("UTF-8").decode(cBuffer).toString();
+			// System.out.println("++++> " + clientString);
+
+			// cBuffer.flip();
+			// cBuffer.clear();
+			// // cBuffer.put(processClientRequest(input).getBytes());
+			// cBuffer.flip();
+			// cBuffer.rewind();
+			// this.marketChannel.write(cBuffer);
+			// this.marketChannel.close();
+			// }
+		}
+	}
+
+	public void processMarketToBroker() {
 	}
 
 	public void broadcast(String msg, SocketChannel channel) throws IOException {

@@ -15,7 +15,7 @@ import java.util.Iterator;
  */
 public class Market {
 
-	private int port = 5000;
+	private int port = 5001;
 	private String hostName = "localhost";
 	private ByteBuffer bb = ByteBuffer.allocate(1000);
 
@@ -31,9 +31,8 @@ public class Market {
 		try {
 			// non blocking client socket
 			SocketChannel sc = SocketChannel.open();
-			sc.configureBlocking(false);
-
 			InetSocketAddress addr = new InetSocketAddress(hostName, port);
+			sc.configureBlocking(false);
 			sc.connect(addr);
 
 			while (!sc.finishConnect()) {
