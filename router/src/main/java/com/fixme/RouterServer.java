@@ -90,39 +90,33 @@ public class RouterServer {
 
 		switch (sChannel.socket().getLocalPort()) {
 		case 5000:
+			this.brokerChannel = sChannel;
 			processBrokerToMarket(cBuffer);
-			this.marketChannel.register(s, SelectionKey.OP_READ);
+			this.marketChannel.register(s, SelectionKey.OP_WRITE);
 			break;
 		case 5001:
-			processMarketToBroker();
-			this.brokerChannel.register(s, SelectionKey.OP_READ);
+			this.marketChannel = sChannel;
+			processMarketToBroker(cBuffer);
+			this.brokerChannel.register(s, SelectionKey.OP_WRITE);
 			break;
 		}
 
 	}
 
-	public void processBrokerToMarket(ByteBuffer cBuffer) {
+	public void processBrokerToMarket(ByteBuffer cBuffer) throws IOException {
 		String clientString;
 		if (this.marketChannel.isConnected()) {
-
-			// int count = this.marketChannel.read(cBuffer);
-			// if (count > 0) {
-			// cBuffer.flip();
-			// clientString = Charset.forName("UTF-8").decode(cBuffer).toString();
-			// System.out.println("++++> " + clientString);
-
-			// cBuffer.flip();
-			// cBuffer.clear();
-			// // cBuffer.put(processClientRequest(input).getBytes());
-			// cBuffer.flip();
-			// cBuffer.rewind();
-			// this.marketChannel.write(cBuffer);
-			// this.marketChannel.close();
-			// }
+			int count = this.brokerChannel.read(cBuffer);
+			if (count > 0) {
+				cBuffer.flip();
+				clientString = Charset.forName("UTF-8").decode(cBuffer).toString();
+				System.out.println("++++> " + clientString);
+				this.broadcast(clientString, this.marketChannel);
+			}
 		}
 	}
 
-	public void processMarketToBroker() {
+	public void processMarketToBroker(ByteBuffer cBuffer) {
 	}
 
 	public void broadcast(String msg, SocketChannel channel) throws IOException {
