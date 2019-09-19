@@ -70,11 +70,13 @@ public class RouterServer {
 
 		switch (sChannel.socket().getLocalPort()) {
 		case 5000:
+			this.brokerChannel = sChannel;
 			System.out.println("Connection from Broker is got!!!");
 			sChannel.configureBlocking(false);
 			sChannel.register(s, SelectionKey.OP_READ);
 			break;
 		case 5001:
+			this.marketChannel = sChannel;
 			System.out.println("Connection from Market is got!!!");
 			sChannel.configureBlocking(false);
 			sChannel.register(s, SelectionKey.OP_READ);
@@ -95,7 +97,6 @@ public class RouterServer {
 			this.marketChannel.register(s, SelectionKey.OP_WRITE);
 			break;
 		case 5001:
-			this.marketChannel = sChannel;
 			processMarketToBroker(cBuffer);
 			this.brokerChannel.register(s, SelectionKey.OP_WRITE);
 			break;

@@ -70,7 +70,7 @@ public class Broker {
 
 	public static void main(String[] args) {
 		Broker client = new Broker();
-		client.getResponseFromServer("ff");
+		client.getResponseFromServer("ffrrrrrrr");
 	}
 
 	// main client method
