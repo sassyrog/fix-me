@@ -110,13 +110,31 @@ public class RouterServer {
 			if (count > 0) {
 				cBuffer.flip();
 				clientString = Charset.forName("UTF-8").decode(cBuffer).toString();
-				System.out.println("++++> " + clientString);
+				System.out.println("B to M ++++> " + clientString);
 				this.broadcast(clientString, this.marketChannel);
 			}
 		}
 	}
 
-	public void processMarketToBroker(ByteBuffer cBuffer) {
+	public void processMarketToBroker(ByteBuffer cBuffer) throws IOException {
+		String clientString;
+		if (this.brokerChannel.isConnected()) {
+			int count = this.marketChannel.read(cBuffer);
+			if (count > 0) {
+				cBuffer.flip();
+				clientString = Charset.forName("UTF-8").decode(cBuffer).toString();
+				System.out.println("M to B ++++> " + clientString);
+				// this.broadcast(clientString, this.marketChannel);
+
+				// cBuffer.flip();
+				// cBuffer.clear();
+				// // cBuffer.put(processClientRequest(input).getBytes());
+				// cBuffer.flip();
+				// cBuffer.rewind();
+				// this.marketChannel.write(cBuffer);
+				// this.marketChannel.close();
+			}
+		}
 	}
 
 	public void broadcast(String msg, SocketChannel channel) throws IOException {
