@@ -63,6 +63,7 @@ public class Market {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			i.remove();
 		}
 		return false;
 	}
