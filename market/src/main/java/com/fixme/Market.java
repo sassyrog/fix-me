@@ -87,7 +87,7 @@ public class Market {
 			cBuffer.rewind();
 			sChannel.write(cBuffer);
 
-			sChannel.close();
+			// sChannel.close();
 		}
 	}
 }

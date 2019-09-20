@@ -151,6 +151,9 @@ public class RouterServer {
 	}
 
 	public String broadcast(String msg, SocketChannel channel) throws IOException {
+
+		if (channel.isConnected())
+			System.out.println("Is connected");
 		ByteBuffer bb = ByteBuffer.allocate(1000);
 		bb.flip();
 		bb.clear();
