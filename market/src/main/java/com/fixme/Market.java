@@ -17,7 +17,7 @@ public class Market {
 
 	private int port = 5001;
 	private String hostName = "localhost";
-	private ByteBuffer bb = ByteBuffer.allocate(1000);
+	private ByteBuffer cBuffer = ByteBuffer.allocate(1000);
 
 	public static void main(String[] args) {
 		Market client = new Market();
@@ -69,32 +69,31 @@ public class Market {
 
 	public void readWriteClient(SelectionKey sKey) throws IOException {
 		SocketChannel sChannel = (SocketChannel) sKey.channel();
-		ByteBuffer cBuffer = ByteBuffer.allocate(1000);
 
 		cBuffer.flip();
 		cBuffer.clear();
 
 		int count = sChannel.read(cBuffer);
 
-		try {
-			if (count > 0) {
-				cBuffer.flip();
-				String input = Charset.forName("UTF-8").decode(cBuffer).toString();
-				System.out.println("server msg : " + input);
+		// try {
+		if (count > 0) {
+			cBuffer.flip();
+			String input = Charset.forName("UTF-8").decode(cBuffer).toString();
+			System.out.println("server msg : " + input);
 
-				// Thread.sleep(3000);
-				cBuffer.flip();
-				cBuffer.clear();
-				cBuffer.put("something from the Market".getBytes());
-				cBuffer.flip();
-				cBuffer.rewind();
-				sChannel.write(cBuffer);
+			// Thread.sleep(3000);
+			cBuffer.flip();
+			cBuffer.clear();
+			cBuffer.put("something from the Market".getBytes());
+			cBuffer.flip();
+			cBuffer.rewind();
+			sChannel.write(cBuffer);
 
-				// sChannel.close();
-			}
-
-		} catch (InterruptedException ie) {
-			ie.printStackTrace();
+			// sChannel.close();
 		}
+
+		// } catch (InterruptedException ie) {
+		// ie.printStackTrace();
+		// }
 	}
 }
