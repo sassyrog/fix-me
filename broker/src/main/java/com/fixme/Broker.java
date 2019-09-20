@@ -16,58 +16,30 @@ import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.Scanner;
 
-import com.fixme.controlers.MysqlConnect;
-
 /**
  * Hello world!
  *
  */
 public class Broker {
-	public static void main(String[] args) {
-		Auth auth = new Auth();
-		auth.login();
-	}
-	// static private MysqlConnect conn = MysqlConnect.getDbCon();
+	private Auth auth = new Auth();
 
 	// public static void main(String[] args) {
-	// Scanner scn = new Scanner(System.in);
-
-	// try {
-	// File file = new File(".brocker_details");
-	// // File details = new File("simulation.txt");
-	// BufferedReader b = new BufferedReader(new FileReader(file));
-
-	// String username = b.readLine().trim();
-	// String password = b.readLine().trim();
-
-	// b.close();
-	// } catch (IOException e) {
-
-	// String choice = "";
-	// while (!choice.equals("s") && !choice.equals("l")) {
-	// System.out.print("Would you like to sign up or login (s|l): ");
-	// choice = scn.nextLine().trim();
+	// Auth auth = new Auth();
+	// auth.login();
 	// }
+	// static private MysqlConnect conn = MysqlConnect.getDbCon();
 
-	// if (choice.equals("s")) {
-	// System.out.print("Broker Name : ");
-	// String name = scn.nextLine().trim();
-	// System.out.print("username : ");
-	// String username = scn.nextLine().trim();
-	// System.out.print("password : ");
-	// String password = scn.nextLine();
+	public static void main(String[] args) {
+		Scanner scn = new Scanner(System.in);
 
-	// try {
-	// ResultSet rSet = conn.query("SELECT br_username FROM brokers WHERE br_name =
-	// '" + username + "'");
-	// } catch (SQLException sqle) {
-	// sqle.printStackTrace();
-	// // TODO: handle exception
-	// }
-	// }
-	// }
-	// scn.close();
-	// }
+		String choice = "";
+		while (!choice.equals("s") && !choice.equals("l")) {
+			System.out.print("Would you like to sign up or login (s|l): ");
+			choice = scn.nextLine().trim();
+		}
+
+		scn.close();
+	}
 	// private int port = 5000;
 	// private String hostName = "localhost";
 	// private ByteBuffer bb = ByteBuffer.allocate(1000);
