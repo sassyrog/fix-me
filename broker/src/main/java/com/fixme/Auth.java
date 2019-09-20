@@ -109,7 +109,6 @@ public class Auth {
 				String pHash = rSet.getString("br_password");
 				BCrypt.Result res = BCrypt.verifyer().verify(this.password1.toCharArray(), pHash);
 				if (res.verified) {
-					System.out.println("YIIIIIIP");
 					return true;
 				} else {
 					System.out.println("\nCould not login. Please make sure username and password are correct");

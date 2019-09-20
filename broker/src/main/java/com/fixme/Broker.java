@@ -98,8 +98,6 @@ public class Broker {
 						bb.rewind();
 						String response = Charset.forName("UTF-8").decode(bb).toString();
 						System.out.println("response: " + response);
-
-						// schannel.close();
 						return true;
 					}
 				}
