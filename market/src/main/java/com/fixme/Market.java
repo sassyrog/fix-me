@@ -63,7 +63,6 @@ public class Market {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			i.remove();
 		}
 		return false;
 	}
@@ -83,7 +82,7 @@ public class Market {
 
 			cBuffer.flip();
 			cBuffer.clear();
-			cBuffer.put("something from the Client".getBytes());
+			cBuffer.put("something from the Market".getBytes());
 			cBuffer.flip();
 			cBuffer.rewind();
 			sChannel.write(cBuffer);

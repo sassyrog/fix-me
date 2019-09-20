@@ -115,7 +115,14 @@ public class RouterServer {
 				cBuffer.flip();
 				clientString = Charset.forName("UTF-8").decode(cBuffer).toString();
 				System.out.println("B to M ++++> " + clientString);
-				this.broadcast(clientString, this.marketChannel);
+				String someString = this.broadcast(clientString, this.marketChannel);
+				cBuffer.flip();
+				cBuffer.clear();
+				cBuffer.put(someString.getBytes());
+				cBuffer.flip();
+				cBuffer.rewind();
+				this.brokerChannel.write(cBuffer);
+				// this.marketChannel.close();
 			}
 		}
 	}
@@ -143,13 +150,41 @@ public class RouterServer {
 		}
 	}
 
-	public void broadcast(String msg, SocketChannel channel) throws IOException {
+	public String broadcast(String msg, SocketChannel channel) throws IOException {
 		ByteBuffer bb = ByteBuffer.allocate(1000);
 		bb.flip();
 		bb.clear();
 		bb.put(msg.getBytes());
 		bb.flip();
 		channel.write(bb);
+
+		Selector selector = Selector.open();
+		channel.register(selector, SelectionKey.OP_READ);
+		while (true) {
+			if (selector.select() > 0) {
+				Iterator<SelectionKey> i = selector.selectedKeys().iterator();
+				while (i.hasNext()) {
+					try {
+						SelectionKey sk = i.next();
+						if (sk.isReadable()) {
+							SocketChannel schannel = (SocketChannel) sk.channel();
+							bb.flip();
+							bb.clear();
+
+							int count = schannel.read(bb);
+							if (count > 0) {
+								bb.rewind();
+								String response = Charset.forName("UTF-8").decode(bb).toString();
+								return response;
+							}
+						}
+						i.remove();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		}
 	}
 
 	public SocketChannel getMarketChannel() {
