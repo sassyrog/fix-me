@@ -1,6 +1,7 @@
 package com.fixme;
 
 import java.io.Console;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.regex.Pattern;
@@ -33,10 +34,6 @@ public class Auth {
 			password1 = new String(console.readPassword("Password : "));
 			password2 = new String(console.readPassword("re-type Password : "));
 
-			// System.out.println("name : " + name);
-			// System.out.println("username : " + username);
-			// System.out.println("password : " + password);
-
 			System.out.println();
 			if (name.equals(""))
 				System.out.println("\u001B[1;31mBroker Name cannot be empty\u001B[0m");
@@ -62,7 +59,6 @@ public class Auth {
 	}
 
 	public void signUpDB() {
-		System.out.println("here");
 		try {
 			ResultSet rSet = conn.query("SELECT 1 FROM brokers WHERE br_username = '" + this.username + "'");
 
@@ -71,13 +67,12 @@ public class Auth {
 				signUp();
 			} else {
 				String pHash = BCrypt.withDefaults().hashToString(10, this.password1.toCharArray());
-				// String password = BCrypt.hashpw("password", BCrypt.gensalt(12));
-
 				String query = "INSERT INTO brokers ( br_name, br_username, br_password,  br_ip) VALUES (?,?,?,?)";
 				String vals[] = { this.name, this.username, pHash, "1" };
 				int res = conn.preparedStringInsert(query, vals);
+				if (res == 0)
+					throw new SQLException("Something went wrong");
 			}
-			System.out.println("Naaaah");
 
 		} catch (SQLException e) {
 			e.printStackTrace();
