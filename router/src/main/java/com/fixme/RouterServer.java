@@ -11,6 +11,8 @@ import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
 import java.util.Iterator;
 
+import com.fixme.controlers.TimeMessage;
+
 /**
  * RouterServer
  */
@@ -71,13 +73,13 @@ public class RouterServer {
 		switch (sChannel.socket().getLocalPort()) {
 		case 5000:
 			this.brokerChannel = sChannel;
-			System.out.println("Connection from Broker is got!!!");
+			TimeMessage.print("Broker connection!!!");
 			sChannel.configureBlocking(false);
 			sChannel.register(s, SelectionKey.OP_READ);
 			break;
 		case 5001:
 			this.marketChannel = sChannel;
-			System.out.println("Connection from Market is got!!!");
+			TimeMessage.print("Market connection!!!");
 			sChannel.configureBlocking(false);
 			sChannel.register(s, SelectionKey.OP_READ);
 			break;
@@ -95,8 +97,6 @@ public class RouterServer {
 		this.marketChannel.register(s, SelectionKey.OP_WRITE);
 	}
 
-	// Problem might be here
-
 	public void processBrokerToMarket(ByteBuffer cBuffer) throws IOException {
 		String clientString;
 		if (this.marketChannel.isConnected()) {
@@ -112,7 +112,6 @@ public class RouterServer {
 				cBuffer.flip();
 				cBuffer.rewind();
 				this.brokerChannel.write(cBuffer);
-				// this.marketChannel.close();
 			}
 		}
 	}
@@ -120,24 +119,7 @@ public class RouterServer {
 	// Problem might be here 2
 
 	public void processMarketToBroker(ByteBuffer cBuffer) throws IOException {
-		String clientString = "00000000";
-		System.out.println("M to B ++++> " + clientString);
-		if (this.brokerChannel.isConnected()) {
-			int count = this.marketChannel.read(cBuffer);
-			if (count > 0) {
-				cBuffer.flip();
-				clientString = Charset.forName("UTF-8").decode(cBuffer).toString();
-				// this.broadcast(clientString, this.brokerChannel);
 
-				// cBuffer.flip();
-				// cBuffer.clear();
-				// // cBuffer.put(processClientRequest(input).getBytes());
-				// cBuffer.flip();
-				// cBuffer.rewind();
-				// this.marketChannel.write(cBuffer);
-				// this.marketChannel.close();
-			}
-		}
 	}
 
 	public String broadcast(String msg, SocketChannel channel) throws IOException {

@@ -21,13 +21,11 @@ public class Market {
 
 	public static void main(String[] args) {
 		Market client = new Market();
-		client.getResponseFromServer();
-		Market client2 = new Market();
-		client2.getResponseFromServer();
+		client.marketNIO();
 	}
 
-	// main client method
-	public void getResponseFromServer() {
+	// main market method
+	public void marketNIO() {
 		try {
 			// non blocking client socket
 			SocketChannel sc = SocketChannel.open();
@@ -43,7 +41,7 @@ public class Market {
 			sc.register(selector, SelectionKey.OP_READ);
 			while (true) {
 				if (selector.select() > 0) {
-					processServerResponse(selector);
+					processServerIO(selector);
 				}
 			}
 		} catch (IOException e) {
@@ -51,13 +49,13 @@ public class Market {
 		}
 	}
 
-	public boolean processServerResponse(Selector s) {
+	public boolean processServerIO(Selector s) {
 		Iterator<SelectionKey> i = s.selectedKeys().iterator();
 		while (i.hasNext()) {
 			try {
 				SelectionKey sk = i.next();
 				if (sk.isReadable()) {
-					readWriteClient(sk);
+					serverReadWrite(sk);
 				}
 				i.remove();
 			} catch (IOException e) {
@@ -67,7 +65,7 @@ public class Market {
 		return false;
 	}
 
-	public void readWriteClient(SelectionKey sKey) throws IOException {
+	public void serverReadWrite(SelectionKey sKey) throws IOException {
 		SocketChannel sChannel = (SocketChannel) sKey.channel();
 
 		cBuffer.flip();
