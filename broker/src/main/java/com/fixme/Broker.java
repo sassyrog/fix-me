@@ -25,7 +25,7 @@ import com.fixme.controlers.MysqlConnect;
 public class Broker {
 	public static void main(String[] args) {
 		Auth auth = new Auth();
-		auth.signUp();
+		auth.login();
 	}
 	// static private MysqlConnect conn = MysqlConnect.getDbCon();
 
