@@ -36,7 +36,7 @@ public class RouterServer {
 				ssChannel.register(selector, SelectionKey.OP_ACCEPT);
 			}
 
-			System.out.println("Routing server is now running...");
+			System.out.println("\u001B[1;32mRouting server is now running...\u001B[0m");
 			while (true) {
 				if (selector.select() > 0) {
 					performIO(selector);
@@ -104,7 +104,7 @@ public class RouterServer {
 			if (count > 0) {
 				cBuffer.flip();
 				clientString = Charset.forName("UTF-8").decode(cBuffer).toString();
-				System.out.println("B to M ++++> " + clientString);
+				System.out.println("Broker request: " + clientString);
 				String someString = this.broadcast(clientString, this.marketChannel);
 				cBuffer.flip();
 				cBuffer.clear();
@@ -115,8 +115,6 @@ public class RouterServer {
 			}
 		}
 	}
-
-	// Problem might be here 2
 
 	public void processMarketToBroker(ByteBuffer cBuffer) throws IOException {
 
