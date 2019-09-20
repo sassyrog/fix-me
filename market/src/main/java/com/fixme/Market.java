@@ -75,19 +75,26 @@ public class Market {
 		cBuffer.clear();
 
 		int count = sChannel.read(cBuffer);
-		if (count > 0) {
-			cBuffer.flip();
-			String input = Charset.forName("UTF-8").decode(cBuffer).toString();
-			System.out.println("server msg : " + input);
 
-			cBuffer.flip();
-			cBuffer.clear();
-			cBuffer.put("something from the Market".getBytes());
-			cBuffer.flip();
-			cBuffer.rewind();
-			sChannel.write(cBuffer);
+		try {
+			if (count > 0) {
+				cBuffer.flip();
+				String input = Charset.forName("UTF-8").decode(cBuffer).toString();
+				System.out.println("server msg : " + input);
 
-			// sChannel.close();
+				// Thread.sleep(3000);
+				cBuffer.flip();
+				cBuffer.clear();
+				cBuffer.put("something from the Market".getBytes());
+				cBuffer.flip();
+				cBuffer.rewind();
+				sChannel.write(cBuffer);
+
+				// sChannel.close();
+			}
+
+		} catch (InterruptedException ie) {
+			ie.printStackTrace();
 		}
 	}
 }
