@@ -1,7 +1,6 @@
 package com.fixme;
 
 import java.io.Console;
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.regex.Pattern;
