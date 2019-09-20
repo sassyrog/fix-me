@@ -2,6 +2,7 @@ package com.fixme.controlers;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -13,6 +14,7 @@ import java.sql.Statement;
 public final class MysqlConnect {
 	public Connection conn;
 	private Statement statement;
+	private PreparedStatement pStatement;
 	public static MysqlConnect db;
 
 	private MysqlConnect() {
@@ -77,4 +79,17 @@ public final class MysqlConnect {
 		return result;
 	}
 
+	public int preparedStringInsert(String query, String[] values) throws SQLException {
+		int count = 0;
+		for (int i = 0; i < query.toCharArray().length; i++) {
+			if (query.toCharArray()[i] == '?')
+				count++;
+		}
+		this.pStatement = db.conn.prepareStatement(query);
+		for (int i = 0; i < count; i++) {
+			this.pStatement.setString(i + 1, values[i]);
+		}
+		int result = this.pStatement.executeUpdate();
+		return result;
+	}
 }

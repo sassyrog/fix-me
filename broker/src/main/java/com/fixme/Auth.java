@@ -5,7 +5,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.regex.Pattern;
 
-import com.fixme.controlers.MysqlConnect;;
+import com.fixme.controlers.MysqlConnect;
+
+import at.favre.lib.crypto.bcrypt.BCrypt;;
 
 /**
  * Auth
@@ -62,13 +64,20 @@ public class Auth {
 	public void signUpDB() {
 		System.out.println("here");
 		try {
-
 			ResultSet rSet = conn.query("SELECT 1 FROM brokers WHERE br_username = '" + this.username + "'");
 
-			if (rSet.next())
-				System.out.println("Yiiiip");
-			else
-				System.out.println("Naaaah");
+			if (rSet.next()) {
+				System.out.println("Username already exists!!!");
+				signUp();
+			} else {
+				String pHash = BCrypt.withDefaults().hashToString(10, this.password1.toCharArray());
+				// String password = BCrypt.hashpw("password", BCrypt.gensalt(12));
+
+				String query = "INSERT INTO brokers ( br_name, br_username, br_password,  br_ip) VALUES (?,?,?,?)";
+				String vals[] = { this.name, this.username, pHash, "1" };
+				int res = conn.preparedStringInsert(query, vals);
+			}
+			System.out.println("Naaaah");
 
 		} catch (SQLException e) {
 			e.printStackTrace();
