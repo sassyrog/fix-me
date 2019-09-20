@@ -1,6 +1,7 @@
 package com.fixme;
 
 import java.io.Console;
+import java.util.regex.Pattern;;
 
 /**
  * Auth
@@ -31,8 +32,12 @@ public class Auth {
 			System.out.println();
 			if (name.equals(""))
 				System.out.println("\u001B[1;31mBroker Name cannot be empty\u001B[0m");
+			else if (!Pattern.matches("^[a-zA-Z]\'?[-a-zA-Z]+$", name))
+				System.out.println("\u001B[1;31mName not right\u001B[0m");
 			else if (username.equals(""))
 				System.out.println("\u001B[1;31mUsername cannot be empty\u001B[0m");
+			else if (!Pattern.matches("^[a-zA-Z0-9_]+$", username))
+				System.out.println("\u001B[1;31mUsername not right\u001B[0m");
 			else if (password1.equals(""))
 				System.out.println("\u001B[1;31mPassword cannot be empty\u001B[0m");
 			else if (!password2.equals(password1))
