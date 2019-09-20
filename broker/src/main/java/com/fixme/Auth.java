@@ -81,7 +81,7 @@ public class Auth {
 		return loginDB();
 	}
 
-	public void signUpDB() {
+	private void signUpDB() {
 		try {
 			ResultSet rSet = conn.query("SELECT 1 FROM brokers WHERE br_username = '" + this.username + "'");
 
@@ -102,7 +102,7 @@ public class Auth {
 		}
 	}
 
-	public boolean loginDB() {
+	private boolean loginDB() {
 		try {
 			ResultSet rSet = conn
 					.query("SELECT br_username, br_password FROM brokers WHERE br_username = '" + this.username + "'");

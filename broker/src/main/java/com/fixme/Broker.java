@@ -22,14 +22,13 @@ import java.util.Scanner;
  */
 public class Broker {
 	private Auth auth = new Auth();
-
-	// public static void main(String[] args) {
-	// Auth auth = new Auth();
-	// auth.login();
-	// }
-	// static private MysqlConnect conn = MysqlConnect.getDbCon();
+	private int port = 5000;
+	private String hostName = "localhost";
+	private ByteBuffer bb = ByteBuffer.allocate(1000);
 
 	public static void main(String[] args) {
+		Broker broker = new Broker();
+		boolean valid = false;
 		Scanner scn = new Scanner(System.in);
 
 		String choice = "";
@@ -37,17 +36,17 @@ public class Broker {
 			System.out.print("Would you like to sign up or login (s|l): ");
 			choice = scn.nextLine().trim();
 		}
-
+		if (choice.equals("s")) {
+			valid = broker.getAuth().signUp();
+		} else if (choice.equals("l")) {
+			valid = broker.getAuth().login();
+		}
 		scn.close();
 	}
-	// private int port = 5000;
-	// private String hostName = "localhost";
-	// private ByteBuffer bb = ByteBuffer.allocate(1000);
 
-	// public static void main(String[] args) {
-	// Broker client = new Broker();
-	// client.getResponseFromServer("ffrrrrrrr");
-	// }
+	public Auth getAuth() {
+		return this.auth;
+	}
 
 	// // main client method
 	// public void getResponseFromServer(String request) {
