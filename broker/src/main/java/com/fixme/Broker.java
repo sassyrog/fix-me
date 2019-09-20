@@ -19,6 +19,8 @@ public class Broker {
 	private int port = 5000;
 	private String hostName = "localhost";
 	private ByteBuffer bb = ByteBuffer.allocate(1000);
+	private SocketChannel sChannel;
+	private InetSocketAddress addr;
 
 	public static void main(String[] args) {
 		Broker broker = new Broker();
@@ -35,6 +37,18 @@ public class Broker {
 		} else if (choice.equals("l")) {
 			valid = broker.getAuth().login();
 		}
+
+		if (valid) {
+			try {
+				broker.createConnection();
+				while (true) {
+					System.out.print("command > ");
+					broker.getResponseFromServer(scn.nextLine().trim());
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		scn.close();
 	}
 
@@ -42,38 +56,30 @@ public class Broker {
 		return this.auth;
 	}
 
-	public void getResponseFromServer(String request) {
-		try {
-			// non blocking client socket
-			SocketChannel sc = SocketChannel.open();
-			sc.configureBlocking(false);
+	public void createConnection() throws IOException {
+		this.sChannel = SocketChannel.open();
+		this.addr = new InetSocketAddress(this.hostName, this.port);
+		this.sChannel.configureBlocking(false);
+		this.sChannel.connect(addr);
+		while (!sChannel.finishConnect()) {
+			System.out.println("conneting to server...");
+		}
+	}
 
-			InetSocketAddress addr = new InetSocketAddress(hostName, port);
-			sc.connect(addr);
-
-			while (!sc.finishConnect()) {
-				System.out.println("conneting to server");
-			}
-
-			// send request
-			bb.flip();
-			bb.clear();
-			bb.put(request.getBytes());
-			bb.flip();
-			sc.write(bb);
-
-			// process response
-			Selector selector = Selector.open();
-			sc.register(selector, SelectionKey.OP_READ);
-			while (true) {
-				if (selector.select() > 0) {
-					if (processServerResponse(selector)) {
-						return;
-					}
+	public void getResponseFromServer(String request) throws IOException {
+		this.bb.flip();
+		this.bb.clear();
+		this.bb.put(request.getBytes());
+		this.bb.flip();
+		this.sChannel.write(bb);
+		Selector selector = Selector.open();
+		this.sChannel.register(selector, SelectionKey.OP_READ);
+		while (true) {
+			if (selector.select() > 0) {
+				if (processServerResponse(selector)) {
+					return;
 				}
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 
@@ -93,7 +99,7 @@ public class Broker {
 						String response = Charset.forName("UTF-8").decode(bb).toString();
 						System.out.println("response: " + response);
 
-						schannel.close();
+						// schannel.close();
 						return true;
 					}
 				}
