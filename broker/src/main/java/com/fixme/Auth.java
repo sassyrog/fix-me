@@ -1,6 +1,8 @@
 package com.fixme;
 
 import java.io.Console;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.regex.Pattern;
 
 import com.fixme.controlers.MysqlConnect;;
@@ -58,6 +60,19 @@ public class Auth {
 	}
 
 	public void signUpDB() {
+		System.out.println("here");
+		try {
 
+			ResultSet rSet = conn.query("SELECT 1 FROM brokers WHERE br_username = '" + this.username + "'");
+
+			if (rSet.next())
+				System.out.println("Yiiiip");
+			else
+				System.out.println("Naaaah");
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			// TODO: handle exception
+		}
 	}
 }
