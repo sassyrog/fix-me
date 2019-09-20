@@ -1,7 +1,9 @@
 package com.fixme;
 
 import java.io.Console;
-import java.util.regex.Pattern;;
+import java.util.regex.Pattern;
+
+import com.fixme.controlers.MysqlConnect;;
 
 /**
  * Auth
@@ -12,6 +14,8 @@ public class Auth {
 	private String username = "";
 	private String password1 = "";
 	private String password2 = "";
+
+	static private MysqlConnect conn = MysqlConnect.getDbCon();
 
 	public Auth() {
 	}
@@ -47,8 +51,13 @@ public class Auth {
 				if (coor.equals("y") || coor.equals("Y"))
 					track++;
 			}
-
 		}
+
+		signUpDB();
+
+	}
+
+	public void signUpDB() {
 
 	}
 }
