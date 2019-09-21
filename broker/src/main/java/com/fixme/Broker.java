@@ -45,7 +45,7 @@ public class Broker {
 				System.out.print("instruction: ");
 				String instr = scn.nextLine().trim();
 				if (instr.equalsIgnoreCase("buy")) {
-					System.out.println("----> buy");
+					BrokerHandler.brokerBuy();
 				} else if (instr.equalsIgnoreCase("sell")) {
 					System.out.println("++++> sell");
 				} else {
