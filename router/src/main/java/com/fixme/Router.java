@@ -1,8 +1,5 @@
 package com.fixme;
 
-import java.io.IOException;
-import java.nio.channels.SocketChannel;
-
 import com.fixme.RouterServer;
 import com.fixme.controlers.TimeMessage;
 
@@ -24,7 +21,6 @@ public class Router {
 
 		// } catch (IOException e) {
 		// e.printStackTrace();
-		// // TODO: handle exception
 		// }
 	}
 

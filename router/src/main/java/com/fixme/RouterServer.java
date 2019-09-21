@@ -137,11 +137,11 @@ public class RouterServer {
 					try {
 						SelectionKey sk = i.next();
 						if (sk.isReadable()) {
-							SocketChannel schannel = (SocketChannel) sk.channel();
+							SocketChannel mChannel = (SocketChannel) sk.channel();
 							bb.flip();
 							bb.clear();
 
-							int count = schannel.read(bb);
+							int count = mChannel.read(bb);
 							if (count > 0) {
 								bb.rewind();
 								String response = Charset.forName("UTF-8").decode(bb).toString();
