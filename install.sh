@@ -14,7 +14,7 @@ if [ "$USER" = "rmdaba" ] ; then
 	-e "ALTER TABLE brokers AUTO_INCREMENT=100000;"
 else
 	mysql --host=localhost --user=root --password="Rootroot3" \
-	-e "CREATE DATABASE IF NOT EXISTS Swingy;" -e "USE Swingy;" \
+	-e "CREATE DATABASE IF NOT EXISTS fixme;" -e "USE fixme;" \
 	-e "CREATE TABLE brokers ( \
 		br_id bigint(20) NOT NULL, \
 		br_name varchar(255) NOT NULL, \

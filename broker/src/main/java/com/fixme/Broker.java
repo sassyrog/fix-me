@@ -39,15 +39,24 @@ public class Broker {
 		}
 
 		if (valid) {
-			try {
-				broker.createConnection();
-				while (true) {
-					System.out.print("command > ");
-					broker.getResponseFromServer(scn.nextLine().trim());
+			// try {
+			// broker.createConnection();
+			while (true) {
+				System.out.print("instruction: ");
+				String instr = scn.nextLine().trim();
+				if (instr.equalsIgnoreCase("buy")) {
+					System.out.println("----> buy");
+				} else if (instr.equalsIgnoreCase("sell")) {
+					System.out.println("++++> sell");
+				} else {
+					System.out.println("Invalid instruction");
 				}
-			} catch (IOException e) {
-				e.printStackTrace();
+
+				// broker.getResponseFromServer(scn.nextLine().trim());
 			}
+			// } catch (IOException e) {
+			// e.printStackTrace();
+			// }
 		}
 		scn.close();
 	}
