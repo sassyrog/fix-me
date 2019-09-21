@@ -10,8 +10,8 @@ if [ "$USER" = "rmdaba" ] ; then
 		br_ip varchar(255) NOT NULL \
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8;" \
 	-e "ALTER TABLE brokers ADD PRIMARY KEY (br_id);" \
-	-e "ALTER TABLE brokers MODIFY br_id bigint(20) NOT NULL AUTO_INCREMENT;" \
-	-e "ALTER TABLE brokers AUTO_INCREMENT=100000;"
+	-e "ALTER TABLE brokers MODIFY br_id bigint(20) NOT NULL AUTO_INCREMENT;"
+	# -e "ALTER TABLE brokers AUTO_INCREMENT=100000;"
 else
 	mysql --host=localhost --user=root --password="Rootroot3" \
 	-e "CREATE DATABASE IF NOT EXISTS fixme;" -e "USE fixme;" \
@@ -24,6 +24,6 @@ else
 		br_ip varchar(255) NOT NULL \
 	) ENGINE=InnoDB DEFAULT CHARSET=utf8;" \
 	-e "ALTER TABLE brokers ADD PRIMARY KEY (br_id);" \
-	-e "ALTER TABLE brokers MODIFY br_id bigint(20) NOT NULL AUTO_INCREMENT;" \
-	-e "ALTER TABLE brokers AUTO_INCREMENT=100000;"
+	-e "ALTER TABLE brokers MODIFY br_id bigint(20) NOT NULL AUTO_INCREMENT;"
+	# -e "ALTER TABLE brokers AUTO_INCREMENT=100000;"
 fi
