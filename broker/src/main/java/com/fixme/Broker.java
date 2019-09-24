@@ -42,12 +42,12 @@ public class Broker {
 			// try {
 			// broker.createConnection();
 			while (true) {
-				System.out.print("instruction: ");
+				System.out.print("instruction (buy|sell) : ");
 				String instr = scn.nextLine().trim();
-				if (instr.equalsIgnoreCase("buy")) {
+				if (instr.trim().equalsIgnoreCase("buy")) {
 					BrokerHandler.brokerBuy();
-				} else if (instr.equalsIgnoreCase("sell")) {
-					System.out.println("++++> sell");
+				} else if (instr.trim().equalsIgnoreCase("sell")) {
+					BrokerHandler.brokerSell();
 				} else {
 					System.out.println("Invalid instruction");
 				}
