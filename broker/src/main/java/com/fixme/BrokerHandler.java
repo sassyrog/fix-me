@@ -4,6 +4,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
 
+import com.fixme.controlers.Colour;
+import com.fixme.controlers.DBTablePrinter;
 import com.fixme.controlers.MysqlConnect;
 
 /**
@@ -16,12 +18,12 @@ public class BrokerHandler {
 	static public String brokerBuy() {
 		try {
 			System.out.println("Here's the list of all available instruments");
-			ResultSet rSet = conn.query("SELECT inst_name, inst_id, inst_amount FROM instruments");
-			if (!rSet.wasNull()) {
-				rSet.next();
-				System.out.println("inst_name : " + rSet.getString("inst_name"));
+			ResultSet rSet = conn
+					.query("SELECT inst_id AS 'ID', inst_name AS 'Name', inst_amount AS 'Amount' FROM instruments");
+			if (rSet.isBeforeFirst()) {
+				DBTablePrinter.printResultSet(rSet);
 			} else {
-				System.out.println("some stuff");
+				Colour.out.red("No instruments to buy!!!\n");
 			}
 		} catch (SQLException se) {
 			se.printStackTrace();
