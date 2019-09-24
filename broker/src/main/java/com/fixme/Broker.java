@@ -10,6 +10,8 @@ import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.Scanner;
 
+import com.fixme.controlers.Colour;
+
 /**
  * Hello world!
  *
@@ -39,10 +41,11 @@ public class Broker {
 		}
 
 		if (valid) {
+			Colour.out.green("\n\tYou are now logged in\n");
 			// try {
 			// broker.createConnection();
 			while (true) {
-				System.out.print("instruction (buy|sell) : ");
+				System.out.print("Instruction (buy|sell) : ");
 				String instr = scn.nextLine().trim();
 				if (instr.trim().equalsIgnoreCase("buy")) {
 					BrokerHandler.brokerBuy();
