@@ -16,10 +16,17 @@ if [ "$USER" = "rmdaba" ] ; then
 		inst_name VARCHAR(255) NOT NULL , \
 		inst_amount FLOAT NOT NULL COMMENT 'per unit measure' , \
 		inst_unit VARCHAR(25) NOT NULL , \
-		inst_br_id INT NOT NULL , \
+		inst_ma_id INT NOT NULL , \
 		inst_price FLOAT NOT NULL DEFAULT '0.00' , \
 		PRIMARY KEY (inst_id)) ENGINE = InnoDB \
-		COMMENT = 'inst is the the prefix for instruments table';"
+		COMMENT = 'inst is the the prefix for instruments table';" \
+	-e "CREATE TABLE fixme.markets ( \
+		ma_id INT NOT NULL AUTO_INCREMENT , \
+		ma_name VARCHAR(255) NOT NULL , \
+		ma_username VARCHAR(255) NOT NULL , \
+		ma_password VARCHAR(255) NOT NULL , \
+		ma_deleted TINYINT(1) NOT NULL DEFAULT '0' , \
+		PRIMARY KEY  (ma_id)) ENGINE = InnoDB;"
 	# -e "ALTER TABLE brokers AUTO_INCREMENT=100000;"
 else
 	mysql --host=localhost --user=root --password="Rootroot3" \
@@ -39,9 +46,16 @@ else
 		inst_name VARCHAR(255) NOT NULL , \
 		inst_amount FLOAT NOT NULL COMMENT 'per unit measure' , \
 		inst_unit VARCHAR(25) NOT NULL , \
-		inst_br_id INT NOT NULL , \
+		inst_ma_id INT NOT NULL , \
 		inst_price FLOAT NOT NULL DEFAULT '0.00' , \
 		PRIMARY KEY (inst_id)) ENGINE = InnoDB \
-		COMMENT = 'inst is the the prefix for instruments table';"
+		COMMENT = 'inst is the the prefix for instruments table';" \
+	-e "CREATE TABLE fixme.markets ( \
+		ma_id INT NOT NULL AUTO_INCREMENT , \
+		ma_name VARCHAR(255) NOT NULL , \
+		ma_username VARCHAR(255) NOT NULL , \
+		ma_password VARCHAR(255) NOT NULL , \
+		ma_deleted TINYINT(1) NOT NULL DEFAULT '0' , \
+		PRIMARY KEY  (ma_id)) ENGINE = InnoDB;"
 	# -e "ALTER TABLE brokers AUTO_INCREMENT=100000;"
 fi

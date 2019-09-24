@@ -18,8 +18,8 @@ public class BrokerHandler {
 	static public String brokerBuy() {
 		try {
 			System.out.println("Here's the list of all available instruments");
-			ResultSet rSet = conn
-					.query("SELECT inst_id AS 'ID', inst_name AS 'Name', inst_amount AS 'Amount' FROM instruments");
+			ResultSet rSet = conn.query(
+					"SELECT inst.inst_id AS 'ID', inst.inst_name AS 'Name', inst.inst_amount AS 'Amount', ma.ma_name AS 'Market' FROM instruments inst INNER JOIN markets ma ON inst.inst_ma_id = ma.ma_id");
 			if (rSet.isBeforeFirst()) {
 				DBTablePrinter.printResultSet(rSet);
 			} else {
