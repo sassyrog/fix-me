@@ -41,7 +41,7 @@ public class Broker {
 		}
 
 		if (valid) {
-			Colour.out.green("\n\tYou are now logged in\n");
+			Colour.out.green("\n\tYThis broker is now logged in\n");
 			// try {
 			// broker.createConnection();
 			while (true) {
