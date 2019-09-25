@@ -8,6 +8,7 @@ import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
 import java.util.Iterator;
+import java.util.Scanner;
 
 /**
  * Hello world!
@@ -18,10 +19,51 @@ public class Market {
 	private int port = 5001;
 	private String hostName = "localhost";
 	private ByteBuffer cBuffer = ByteBuffer.allocate(1000);
+	private Auth auth = new Auth();
 
 	public static void main(String[] args) {
-		Market client = new Market();
-		client.marketNIO();
+		Market market = new Market();
+
+		boolean valid = false;
+		Scanner scn = new Scanner(System.in);
+		String choice = "";
+		while (!choice.equals("s") && !choice.equals("l")) {
+			System.out.print("Would you like to sign up or login (s|l): ");
+			choice = scn.nextLine().trim();
+		}
+		if (choice.equals("s")) {
+			valid = market.getAuth().signUp();
+		} else if (choice.equals("l")) {
+			valid = market.getAuth().login();
+		}
+
+		if (valid) {
+			Colour.out.green("\n\tYou are now logged in\n");
+			// try {
+			// broker.createConnection();
+			while (true) {
+				System.out.print("Instruction (buy|sell) : ");
+				String instr = scn.nextLine().trim();
+				if (instr.trim().equalsIgnoreCase("buy")) {
+					BrokerHandler.brokerBuy();
+				} else if (instr.trim().equalsIgnoreCase("sell")) {
+					BrokerHandler.brokerSell();
+				} else {
+					System.out.println("Invalid instruction");
+				}
+
+				// broker.getResponseFromServer(scn.nextLine().trim());
+			}
+			// } catch (IOException e) {
+			// e.printStackTrace();
+			// }
+		}
+		scn.close();
+		// client.marketNIO();
+	}
+
+	public Auth getAuth() {
+		return this.auth;
 	}
 
 	// main market method
