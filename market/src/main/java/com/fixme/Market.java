@@ -40,6 +40,8 @@ public class Market {
 		}
 
 		if (valid) {
+			Colour.out.green("\n\tYou are now logged in\n");
+
 			// Colour.out.green("\n\tYou are now logged in\n");
 			// try {
 			// broker.createConnection();

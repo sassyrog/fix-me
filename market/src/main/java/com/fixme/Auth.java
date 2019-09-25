@@ -41,7 +41,7 @@ public class Auth {
 			System.out.println();
 			if (name.equals(""))
 				System.out.println("\u001B[1;31mMarket Name cannot be empty\u001B[0m");
-			else if (!Pattern.matches("^[a-zA-Z]\'?[-a-zA-Z]+$", name))
+			else if (!Pattern.matches("^[a-zA-Z ]\'?[-a-zA-Z ]+$", name))
 				System.out.println("\u001B[1;31mName not right\u001B[0m");
 			else if (username.equals(""))
 				System.out.println("\u001B[1;31mUsername cannot be empty\u001B[0m");
@@ -89,7 +89,7 @@ public class Auth {
 				signUp();
 			} else {
 				String pHash = BCrypt.withDefaults().hashToString(10, this.password1.toCharArray());
-				String query = "INSERT INTO brokers ( ma_name, ma_username, ma_password) VALUES (?,?,?)";
+				String query = "INSERT INTO markets ( ma_name, ma_username, ma_password) VALUES (?,?,?)";
 				String vals[] = { this.name, this.username, pHash };
 				int res = conn.preparedStringInsert(query, vals);
 				if (res == 0)

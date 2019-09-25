@@ -41,7 +41,7 @@ public class Auth {
 			System.out.println();
 			if (name.equals(""))
 				System.out.println("\u001B[1;31mBroker Name cannot be empty\u001B[0m");
-			else if (!Pattern.matches("^[a-zA-Z]\'?[-a-zA-Z]+$", name))
+			else if (!Pattern.matches("^[a-zA-Z ]\'?[-a-zA-Z ]+$", name))
 				System.out.println("\u001B[1;31mName not right\u001B[0m");
 			else if (username.equals(""))
 				System.out.println("\u001B[1;31mUsername cannot be empty\u001B[0m");
