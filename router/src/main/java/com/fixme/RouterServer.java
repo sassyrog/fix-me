@@ -99,9 +99,18 @@ public class RouterServer {
 		cBuffer.flip();
 		cBuffer.clear();
 
-		this.brokerChannel = sChannel;
-		processBrokerToMarket(cBuffer);
-		this.marketChannel.register(s, SelectionKey.OP_WRITE);
+		switch (sChannel.socket().getLocalPort()) {
+		case 5000:
+			this.brokerChannel = sChannel;
+			processBrokerToMarket(cBuffer);
+			sChannel.register(s, SelectionKey.OP_WRITE);
+			break;
+		case 5001:
+			this.marketChannel = sChannel;
+			processMarketToBroker(cBuffer);
+			this.marketChannel.register(s, SelectionKey.OP_WRITE);
+			break;
+		}
 	}
 
 	public void processBrokerToMarket(ByteBuffer cBuffer) throws IOException {
@@ -124,7 +133,14 @@ public class RouterServer {
 	}
 
 	public void processMarketToBroker(ByteBuffer cBuffer) throws IOException {
-
+		String clientString;
+		// if (this.marketChannel.isConnected()) {
+		int count = this.marketChannel.read(cBuffer);
+		if (count > 0) {
+			cBuffer.flip();
+			clientString = Charset.forName("UTF-8").decode(cBuffer).toString();
+			System.out.println("Market request: " + clientString);
+		}
 	}
 
 	public String broadcast(String msg, SocketChannel channel) throws IOException {
@@ -152,6 +168,7 @@ public class RouterServer {
 							if (count > 0) {
 								bb.rewind();
 								String response = Charset.forName("UTF-8").decode(bb).toString();
+								i.remove();
 								return response;
 							}
 						}
