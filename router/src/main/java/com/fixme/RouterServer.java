@@ -9,6 +9,7 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import com.fixme.controlers.TimeMessage;
@@ -18,10 +19,14 @@ import com.fixme.controlers.TimeMessage;
  */
 public class RouterServer {
 	private int ports[] = new int[] { 5000, 5001 };
+	HashMap<String, HashMap<String, SocketChannel>> markets;
+	HashMap<String, HashMap<String, SocketChannel>> brokers;
 	private SocketChannel marketChannel;
 	private SocketChannel brokerChannel;
 
 	public RouterServer() {
+		this.markets = new HashMap<String, HashMap<String, SocketChannel>>();
+		this.brokers = new HashMap<String, HashMap<String, SocketChannel>>();
 	}
 
 	public void newRouterServer() {

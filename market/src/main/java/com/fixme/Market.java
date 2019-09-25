@@ -119,7 +119,6 @@ public class Market {
 
 		int count = sChannel.read(cBuffer);
 
-		// try {
 		if (count > 0) {
 			cBuffer.flip();
 			String input = Charset.forName("UTF-8").decode(cBuffer).toString();
@@ -135,9 +134,5 @@ public class Market {
 
 			// sChannel.close();
 		}
-
-		// } catch (InterruptedException ie) {
-		// ie.printStackTrace();
-		// }
 	}
 }
