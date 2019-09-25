@@ -33,10 +33,10 @@ public class Auth {
 		int track = 0;
 		while ((name.equals("") || username.equals("") || password1.equals("")) || track == 0) {
 			System.out.println();
-			name = console.readLine("Market Name : ");
-			username = console.readLine("Username : ");
-			password1 = new String(console.readPassword("Password : "));
-			password2 = new String(console.readPassword("re-type Password : "));
+			name = console.readLine("Market Name : ").trim();
+			username = console.readLine("Username : ").trim();
+			password1 = new String(console.readPassword("Password : ")).trim();
+			password2 = new String(console.readPassword("re-type Password : ")).trim();
 
 			System.out.println();
 			if (name.equals(""))
@@ -66,8 +66,8 @@ public class Auth {
 		password1 = "";
 		while (username.equals("") || password1.equals("")) {
 			System.out.println();
-			username = console.readLine("Username : ");
-			password1 = new String(console.readPassword("Password : "));
+			username = console.readLine("Username : ").trim();
+			password1 = new String(console.readPassword("Password : ")).trim();
 
 			if (username.equals(""))
 				System.out.println("\u001B[1;31mUsername cannot be empty\u001B[0m");
