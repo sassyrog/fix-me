@@ -41,6 +41,7 @@ public class Market {
 
 		if (valid) {
 			Colour.out.green("\n\tYou are now logged in\n");
+			market.marketNIO();
 
 			// Colour.out.green("\n\tYou are now logged in\n");
 			// try {
@@ -63,7 +64,6 @@ public class Market {
 			// }
 		}
 		scn.close();
-		// client.marketNIO();
 	}
 
 	public Auth getAuth() {
