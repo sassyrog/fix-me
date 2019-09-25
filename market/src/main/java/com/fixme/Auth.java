@@ -33,14 +33,14 @@ public class Auth {
 		int track = 0;
 		while ((name.equals("") || username.equals("") || password1.equals("")) || track == 0) {
 			System.out.println();
-			name = console.readLine("Broker Name : ");
+			name = console.readLine("Market Name : ");
 			username = console.readLine("Username : ");
 			password1 = new String(console.readPassword("Password : "));
 			password2 = new String(console.readPassword("re-type Password : "));
 
 			System.out.println();
 			if (name.equals(""))
-				System.out.println("\u001B[1;31mBroker Name cannot be empty\u001B[0m");
+				System.out.println("\u001B[1;31mMarket Name cannot be empty\u001B[0m");
 			else if (!Pattern.matches("^[a-zA-Z]\'?[-a-zA-Z]+$", name))
 				System.out.println("\u001B[1;31mName not right\u001B[0m");
 			else if (username.equals(""))
@@ -82,15 +82,15 @@ public class Auth {
 
 	private void signUpDB() {
 		try {
-			ResultSet rSet = conn.query("SELECT 1 FROM brokers WHERE br_username = '" + this.username + "'");
+			ResultSet rSet = conn.query("SELECT 1 FROM markets WHERE ma_username = '" + this.username + "'");
 
 			if (rSet.next()) {
 				System.out.println("Username already exists!!!");
 				signUp();
 			} else {
 				String pHash = BCrypt.withDefaults().hashToString(10, this.password1.toCharArray());
-				String query = "INSERT INTO brokers ( br_name, br_username, br_password,  br_ip) VALUES (?,?,?,?)";
-				String vals[] = { this.name, this.username, pHash, "1" };
+				String query = "INSERT INTO brokers ( ma_name, ma_username, ma_password) VALUES (?,?,?)";
+				String vals[] = { this.name, this.username, pHash };
 				int res = conn.preparedStringInsert(query, vals);
 				if (res == 0)
 					throw new SQLException("Something went wrong");
@@ -104,9 +104,9 @@ public class Auth {
 	private boolean loginDB() {
 		try {
 			ResultSet rSet = conn
-					.query("SELECT br_username, br_password FROM brokers WHERE br_username = '" + this.username + "'");
+					.query("SELECT ma_username, ma_password FROM markets WHERE ma_username = '" + this.username + "'");
 			if (rSet.next()) {
-				String pHash = rSet.getString("br_password");
+				String pHash = rSet.getString("ma_password");
 				BCrypt.Result res = BCrypt.verifyer().verify(this.password1.toCharArray(), pHash);
 				if (res.verified) {
 					return true;

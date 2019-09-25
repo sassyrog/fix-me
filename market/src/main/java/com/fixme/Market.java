@@ -10,6 +10,8 @@ import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.Scanner;
 
+import com.fixme.controlers.Colour;
+
 /**
  * Hello world!
  *
@@ -38,22 +40,22 @@ public class Market {
 		}
 
 		if (valid) {
-			Colour.out.green("\n\tYou are now logged in\n");
+			// Colour.out.green("\n\tYou are now logged in\n");
 			// try {
 			// broker.createConnection();
-			while (true) {
-				System.out.print("Instruction (buy|sell) : ");
-				String instr = scn.nextLine().trim();
-				if (instr.trim().equalsIgnoreCase("buy")) {
-					BrokerHandler.brokerBuy();
-				} else if (instr.trim().equalsIgnoreCase("sell")) {
-					BrokerHandler.brokerSell();
-				} else {
-					System.out.println("Invalid instruction");
-				}
+			// while (true) {
+			// System.out.print("Instruction (buy|sell) : ");
+			// String instr = scn.nextLine().trim();
+			// if (instr.trim().equalsIgnoreCase("buy")) {
+			// BrokerHandler.brokerBuy();
+			// } else if (instr.trim().equalsIgnoreCase("sell")) {
+			// BrokerHandler.brokerSell();
+			// } else {
+			// System.out.println("Invalid instruction");
+			// }
 
-				// broker.getResponseFromServer(scn.nextLine().trim());
-			}
+			// broker.getResponseFromServer(scn.nextLine().trim());
+			// }
 			// } catch (IOException e) {
 			// e.printStackTrace();
 			// }
