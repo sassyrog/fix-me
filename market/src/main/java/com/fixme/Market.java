@@ -83,6 +83,12 @@ public class Market {
 				System.out.println("conneting to server");
 			}
 
+			this.cBuffer.flip();
+			this.cBuffer.clear();
+			this.cBuffer.put("hey from market".getBytes());
+			this.cBuffer.flip();
+			sc.write(cBuffer);
+
 			Selector selector = Selector.open();
 			sc.register(selector, SelectionKey.OP_READ);
 			while (true) {

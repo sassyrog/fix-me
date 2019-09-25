@@ -19,7 +19,9 @@ import com.fixme.controlers.TimeMessage;
  */
 public class RouterServer {
 	private int ports[] = new int[] { 5000, 5001 };
+	// Router assigned id, market id and Socket channel
 	HashMap<String, HashMap<String, SocketChannel>> markets;
+	// Router assigned id, broker id and Socket channel
 	HashMap<String, HashMap<String, SocketChannel>> brokers;
 	private SocketChannel marketChannel;
 	private SocketChannel brokerChannel;
