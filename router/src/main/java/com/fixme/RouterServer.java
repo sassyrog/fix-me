@@ -107,7 +107,7 @@ public class RouterServer {
 			break;
 		case 5001:
 			this.marketChannel = sChannel;
-			processMarketToBroker(cBuffer);
+			processMarket(cBuffer);
 			this.marketChannel.register(s, SelectionKey.OP_WRITE);
 			break;
 		}
@@ -132,7 +132,7 @@ public class RouterServer {
 		}
 	}
 
-	public void processMarketToBroker(ByteBuffer cBuffer) throws IOException {
+	public void processMarket(ByteBuffer cBuffer) throws IOException {
 		String clientString;
 		// if (this.marketChannel.isConnected()) {
 		int count = this.marketChannel.read(cBuffer);
