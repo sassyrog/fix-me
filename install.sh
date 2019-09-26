@@ -1,4 +1,4 @@
-if [ "$USER" = "rmdaba" ] ; then
+if [ "$USER" = "diputu" ] ; then
 	docker exec fixme-mysql mysql --host=localhost --user=root --password="Rootroot3" \
 	-e "CREATE DATABASE IF NOT EXISTS fixme;" -e "USE fixme;" \
 	-e "CREATE TABLE brokers ( \

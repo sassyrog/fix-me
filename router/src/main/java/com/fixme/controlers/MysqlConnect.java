@@ -18,7 +18,8 @@ public final class MysqlConnect {
 	private MysqlConnect() {
 		String url = "";
 
-		if (System.getenv("USER").equals("rmdaba")) {
+		if (System.getenv("USER").equals("diputu")) {
+			System.out.println("----------> Suuuuuuuup");
 			url = "jdbc:mysql://192.168.99.100:3306/fixme";
 		} else {
 			url = "jdbc:mysql://localhost:3306/fixme";
