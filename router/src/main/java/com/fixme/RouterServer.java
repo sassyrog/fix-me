@@ -118,7 +118,6 @@ public class RouterServer {
 			cBuffer.flip();
 			clientString = Charset.forName("UTF-8").decode(cBuffer).toString().trim();
 			TimeMessage.print(clientString);
-			// System.out.println("Broker request: " + clientString);
 			if (Pattern.matches("new=\\d", clientString)) {
 				Long id = this.nextID();
 				HashMap<String, SocketChannel> blah = new HashMap<String, SocketChannel>();

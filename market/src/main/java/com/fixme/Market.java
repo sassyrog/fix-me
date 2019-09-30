@@ -82,7 +82,6 @@ public class Market {
 	// main market method
 	public void marketNIO() {
 		try {
-			System.out.println("username : " + this.username);
 			ResultSet rSet = conn.query("SELECT ma_id FROM markets WHERE ma_username = '" + this.username + "'");
 			if (rSet.next()) {
 				this.id = rSet.getInt("ma_id");
