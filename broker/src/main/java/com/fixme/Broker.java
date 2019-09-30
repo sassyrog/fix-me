@@ -48,16 +48,16 @@ public class Broker {
 				broker.createConnection();
 				while (true) {
 					System.out.print("Instruction (buy|sell) : ");
-					// String instr = scn.nextLine().trim();
-					// if (instr.trim().equalsIgnoreCase("buy")) {
-					// BrokerHandler.brokerBuy(broker.getCID(), broker);
-					// } else if (instr.trim().equalsIgnoreCase("sell")) {
-					// BrokerHandler.brokerSell(broker.getCID(), broker);
-					// } else {
-					// System.out.println("Invalid instruction");
-					// }
+					String instr = scn.nextLine().trim();
+					if (instr.trim().equalsIgnoreCase("buy")) {
+						BrokerHandler.brokerBuy(broker.getCID(), broker);
+					} else if (instr.trim().equalsIgnoreCase("sell")) {
+						BrokerHandler.brokerSell(broker.getCID(), broker);
+					} else {
+						System.out.println("Invalid instruction");
+					}
 
-					broker.getResponseFromServer(scn.nextLine().trim());
+					// // broker.getResponseFromServer(scn.nextLine().trim());
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -76,7 +76,7 @@ public class Broker {
 		this.sChannel.configureBlocking(false);
 		this.sChannel.connect(addr);
 		while (!sChannel.finishConnect()) {
-			System.out.println("conneting to server...");
+			System.out.println("connecting to server...");
 		}
 		getResponseFromServer("new=1");
 	}
@@ -114,9 +114,8 @@ public class Broker {
 						String response = Charset.forName("UTF-8").decode(bb).toString().trim();
 						if (Pattern.matches("connected=\\d{6}$", response)) {
 							this.clientID = response.split("=")[1];
-						} else {
+						} else
 							System.out.println("response: " + response);
-						}
 						return true;
 					}
 				}

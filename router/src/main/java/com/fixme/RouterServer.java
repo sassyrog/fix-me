@@ -102,18 +102,19 @@ public class RouterServer {
 		switch (sChannel.socket().getLocalPort()) {
 		case 5000:
 			processBrokerToMarket(cBuffer, sChannel);
-			sChannel.register(s, SelectionKey.OP_WRITE);
+			// sChannel.register(s, SelectionKey.OP_READ);
 			break;
 		case 5001:
-			this.marketChannel = sChannel;
 			processMarket(cBuffer, sChannel);
-			this.marketChannel.register(s, SelectionKey.OP_WRITE);
+			// sChannel.register(s, SelectionKey.OP_READ);
 			break;
 		}
 	}
 
 	public void processBrokerToMarket(ByteBuffer cBuffer, SocketChannel sc) throws IOException {
 		String clientString;
+
+		System.out.println(":::::::::::::::::::");
 		int count = sc.read(cBuffer);
 		if (count > 0) {
 			cBuffer.flip();
