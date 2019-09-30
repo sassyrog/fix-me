@@ -19,7 +19,8 @@ public class BrokerHandler {
 
 	static public String brokerBuy(String clientID, Broker broker) {
 		try {
-			broker.getResponseFromServer("markets");
+			String hh = broker.getResponseFromServer("markets");
+			System.out.println("====> " + hh);
 			// System.out.println("Here's the list of all available instruments");
 			// ResultSet rSet = conn.query(
 			// "SELECT inst.inst_id AS 'ID', inst.inst_name AS 'Name', inst.inst_amount AS

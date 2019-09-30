@@ -117,7 +117,8 @@ public class RouterServer {
 		if (count > 0) {
 			cBuffer.flip();
 			clientString = Charset.forName("UTF-8").decode(cBuffer).toString().trim();
-			System.out.println("Broker request: " + clientString);
+			TimeMessage.print(clientString);
+			// System.out.println("Broker request: " + clientString);
 			if (Pattern.matches("new=1", clientString)) {
 				Long id = this.nextID();
 				String respString = "connected=" + id;

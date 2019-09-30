@@ -111,10 +111,8 @@ public class Broker {
 					if (count > 0) {
 						bb.flip();
 						String response = Charset.forName("UTF-8").decode(bb).toString().trim();
-						if (Pattern.matches("connected=\\d{6}$", response)) {
+						if (Pattern.matches("connected=\\d{6}$", response))
 							this.clientID = response.split("=")[1];
-						} else
-							System.out.println("response: " + response);
 						return response;
 					}
 				}
