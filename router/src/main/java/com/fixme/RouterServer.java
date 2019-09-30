@@ -65,6 +65,7 @@ public class RouterServer {
 				if (sKey.isAcceptable()) {
 					acceptConnection(sKey, s);
 				} else if (sKey.isReadable()) {
+					System.out.println("----------gggg---------");
 					readWriteClient(sKey, s);
 				}
 			} catch (IOException e) {
