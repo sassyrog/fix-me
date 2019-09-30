@@ -65,7 +65,6 @@ public class RouterServer {
 				if (sKey.isAcceptable()) {
 					acceptConnection(sKey, s);
 				} else if (sKey.isReadable()) {
-					System.out.println("----------gggg---------");
 					readWriteClient(sKey, s);
 				}
 			} catch (IOException e) {
@@ -113,9 +112,8 @@ public class RouterServer {
 
 	public void processBrokerToMarket(ByteBuffer cBuffer, SocketChannel sc) throws IOException {
 		String clientString;
-
-		System.out.println(":::::::::::::::::::");
 		int count = sc.read(cBuffer);
+
 		if (count > 0) {
 			cBuffer.flip();
 			clientString = Charset.forName("UTF-8").decode(cBuffer).toString().trim();
@@ -131,11 +129,10 @@ public class RouterServer {
 				cBuffer.rewind();
 				sc.write(cBuffer);
 			} else {
-				System.out.println("plop");
 				// String someString = this.broadcast(clientString, this.marketChannel);
 				cBuffer.flip();
 				cBuffer.clear();
-				cBuffer.put("plop-------".getBytes());
+				cBuffer.put("server messa".getBytes());
 				cBuffer.flip();
 				cBuffer.rewind();
 				sc.write(cBuffer);

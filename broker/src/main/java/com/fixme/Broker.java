@@ -56,8 +56,6 @@ public class Broker {
 					} else {
 						System.out.println("Invalid instruction");
 					}
-
-					// // broker.getResponseFromServer(scn.nextLine().trim());
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -110,7 +108,7 @@ public class Broker {
 
 					int count = schannel.read(bb);
 					if (count > 0) {
-						bb.rewind();
+						bb.flip();
 						String response = Charset.forName("UTF-8").decode(bb).toString().trim();
 						if (Pattern.matches("connected=\\d{6}$", response)) {
 							this.clientID = response.split("=")[1];
