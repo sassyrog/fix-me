@@ -7,11 +7,14 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
 import com.fixme.controlers.Colour;
+import com.fixme.controlers.MysqlConnect;
 
 /**
  * Hello world!
@@ -24,11 +27,14 @@ public class Market {
 	private String hostName = "localhost";
 	private ByteBuffer cBuffer = ByteBuffer.allocate(1000);
 	private Auth auth = new Auth();
+	static private MysqlConnect conn = MysqlConnect.getDbCon();
+	private String username;
+	private int id;
 
 	public static void main(String[] args) {
 		Market market = new Market();
 
-		boolean valid = false;
+		String valid = "";
 		Scanner scn = new Scanner(System.in);
 		String choice = "";
 		while (!choice.equals("s") && !choice.equals("l")) {
@@ -36,12 +42,12 @@ public class Market {
 			choice = scn.nextLine().trim();
 		}
 		if (choice.equals("s")) {
-			valid = market.getAuth().signUp();
+			valid = market.getAuth().signUp().trim();
 		} else if (choice.equals("l")) {
-			valid = market.getAuth().login();
+			valid = market.getAuth().login().trim();
 		}
 
-		if (valid) {
+		if (!valid.equals("")) {
 			Colour.out.green("\n\tThis market is now logged in\n");
 			market.marketNIO();
 
@@ -75,19 +81,23 @@ public class Market {
 	// main market method
 	public void marketNIO() {
 		try {
+			ResultSet rSet = conn.query("SELECT na_id FROM markets WHERE ma_username = '" + this.username + "'");
+			if (rSet.next()) {
+				this.id = rSet.getInt("ma_id");
+			}
 			// non blocking client socket
 			SocketChannel sc = SocketChannel.open();
 			InetSocketAddress addr = new InetSocketAddress(hostName, port);
 			sc.configureBlocking(false);
 			sc.connect(addr);
 
-			while (!sc.finishConnect()) {
-				System.out.println("conneting to server");
-			}
+			while (!sc.finishConnect())
+				System.out.println("connecting to server");
+			String req = "new=" + this.id;
 
 			this.cBuffer.flip();
 			this.cBuffer.clear();
-			this.cBuffer.put("new=1".getBytes());
+			this.cBuffer.put(req.getBytes());
 			this.cBuffer.flip();
 			sc.write(cBuffer);
 
@@ -100,6 +110,8 @@ public class Market {
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (SQLException se) {
+			se.printStackTrace();
 		}
 	}
 

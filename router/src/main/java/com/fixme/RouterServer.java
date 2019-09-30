@@ -22,15 +22,15 @@ public class RouterServer {
 	private int ports[] = new int[] { 5000, 5001 };
 	private static long uID = 99999;
 	// Router assigned id and Socket channel
-	HashMap<String, SocketChannel> markets;
+	HashMap<String, HashMap<String, SocketChannel>> markets;
 	// Router assigned id, broker id and Socket channel
-	HashMap<String, SocketChannel> brokers;
+	HashMap<String, HashMap<String, SocketChannel>> brokers;
 	private SocketChannel marketChannel;
 	private SocketChannel brokerChannel;
 
 	public RouterServer() {
-		this.markets = new HashMap<String, SocketChannel>();
-		this.brokers = new HashMap<String, SocketChannel>();
+		this.markets = new HashMap<String, HashMap<String, SocketChannel>>();
+		this.brokers = new HashMap<String, HashMap<String, SocketChannel>>();
 	}
 
 	public void newRouterServer() {
@@ -122,7 +122,7 @@ public class RouterServer {
 			if (Pattern.matches("new=1", clientString)) {
 				Long id = this.nextID();
 				String respString = "connected=" + id;
-				brokers.put(Long.toString(id), sc);
+				// brokers.put(Long.toString(id), sc);
 				cBuffer.flip();
 				cBuffer.clear();
 				cBuffer.put(respString.getBytes());
@@ -151,7 +151,7 @@ public class RouterServer {
 			if (Pattern.matches("new=1", clientString)) {
 				Long id = this.nextID();
 				String respString = "connected=" + id;
-				markets.put(Long.toString(id), sc);
+				// markets.put(Long.toString(id), sc);
 				cBuffer.flip();
 				cBuffer.clear();
 				cBuffer.put(respString.getBytes());
