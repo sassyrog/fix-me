@@ -11,6 +11,7 @@ import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.regex.Pattern;
 
 import com.fixme.controlers.TimeMessage;
 
@@ -19,16 +20,17 @@ import com.fixme.controlers.TimeMessage;
  */
 public class RouterServer {
 	private int ports[] = new int[] { 5000, 5001 };
-	// Router assigned id, market id and Socket channel
-	HashMap<String, HashMap<String, SocketChannel>> markets;
+	private long uID = 99999;
+	// Router assigned id and Socket channel
+	HashMap<String, SocketChannel> markets;
 	// Router assigned id, broker id and Socket channel
-	HashMap<String, HashMap<String, SocketChannel>> brokers;
+	HashMap<String, SocketChannel> brokers;
 	private SocketChannel marketChannel;
 	private SocketChannel brokerChannel;
 
 	public RouterServer() {
-		this.markets = new HashMap<String, HashMap<String, SocketChannel>>();
-		this.brokers = new HashMap<String, HashMap<String, SocketChannel>>();
+		this.markets = new HashMap<String, SocketChannel>();
+		this.brokers = new HashMap<String, SocketChannel>();
 	}
 
 	public void newRouterServer() {
@@ -76,19 +78,16 @@ public class RouterServer {
 	public void acceptConnection(SelectionKey sKey, Selector s) throws IOException {
 		ServerSocketChannel ssChannel = (ServerSocketChannel) sKey.channel();
 		SocketChannel sChannel = ssChannel.accept();
+		sChannel.configureBlocking(false);
+		sChannel.register(s, SelectionKey.OP_READ);
 
 		switch (sChannel.socket().getLocalPort()) {
-		case 5000:
-			this.brokerChannel = sChannel;
+		case 5000: {
 			TimeMessage.print("Broker connection!!!");
-			sChannel.configureBlocking(false);
-			sChannel.register(s, SelectionKey.OP_READ);
 			break;
+		}
 		case 5001:
-			this.marketChannel = sChannel;
 			TimeMessage.print("Market connection!!!");
-			sChannel.configureBlocking(false);
-			sChannel.register(s, SelectionKey.OP_READ);
 			break;
 		}
 	}
@@ -119,15 +118,19 @@ public class RouterServer {
 			int count = this.brokerChannel.read(cBuffer);
 			if (count > 0) {
 				cBuffer.flip();
-				clientString = Charset.forName("UTF-8").decode(cBuffer).toString();
+				clientString = Charset.forName("UTF-8").decode(cBuffer).toString().trim();
 				System.out.println("Broker request: " + clientString);
-				String someString = this.broadcast(clientString, this.marketChannel);
-				cBuffer.flip();
-				cBuffer.clear();
-				cBuffer.put(someString.getBytes());
-				cBuffer.flip();
-				cBuffer.rewind();
-				this.brokerChannel.write(cBuffer);
+				if (Pattern.matches("new=1", clientString)) {
+					System.out.println("new =  1 baby");
+				} else {
+					String someString = this.broadcast(clientString, this.marketChannel);
+					cBuffer.flip();
+					cBuffer.clear();
+					cBuffer.put(someString.getBytes());
+					cBuffer.flip();
+					cBuffer.rewind();
+					this.brokerChannel.write(cBuffer);
+				}
 			}
 		}
 	}
@@ -179,6 +182,10 @@ public class RouterServer {
 				}
 			}
 		}
+	}
+
+	public long nextID() {
+		return (++this.uID);
 	}
 
 	public SocketChannel getMarketChannel() {

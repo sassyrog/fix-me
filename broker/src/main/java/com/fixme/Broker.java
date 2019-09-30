@@ -23,6 +23,7 @@ public class Broker {
 	private ByteBuffer bb = ByteBuffer.allocate(1000);
 	private SocketChannel sChannel;
 	private InetSocketAddress addr;
+	private String clientID;
 
 	public static void main(String[] args) {
 		Broker broker = new Broker();
@@ -76,6 +77,7 @@ public class Broker {
 		while (!sChannel.finishConnect()) {
 			System.out.println("conneting to server...");
 		}
+		getResponseFromServer("new=1");
 	}
 
 	public void getResponseFromServer(String request) throws IOException {
@@ -108,7 +110,7 @@ public class Broker {
 					int count = schannel.read(bb);
 					if (count > 0) {
 						bb.rewind();
-						String response = Charset.forName("UTF-8").decode(bb).toString();
+						String response = Charset.forName("UTF-8").decode(bb).toString().trim();
 						System.out.println("response: " + response);
 						return true;
 					}
