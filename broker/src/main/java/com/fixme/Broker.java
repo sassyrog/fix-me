@@ -43,7 +43,7 @@ public class Broker {
 		}
 
 		if (valid) {
-			Colour.out.green("\n\tYThis broker is now logged in\n");
+			Colour.out.green("\n\tThis broker is now logged in\n");
 			try {
 				broker.createConnection();
 				while (true) {
@@ -79,7 +79,7 @@ public class Broker {
 		getResponseFromServer("new=1");
 	}
 
-	public void getResponseFromServer(String request) throws IOException {
+	public String getResponseFromServer(String request) throws IOException {
 		this.bb.flip();
 		this.bb.clear();
 		this.bb.put(request.getBytes());
@@ -88,13 +88,15 @@ public class Broker {
 		Selector selector = Selector.open();
 		this.sChannel.register(selector, SelectionKey.OP_READ);
 		while (true) {
-			if (selector.select() > 0)
-				if (processServerResponse(selector))
-					return;
+			if (selector.select() > 0) {
+				String respString = processServerResponse(selector).trim();
+				if (!respString.equals(""))
+					return respString;
+			}
 		}
 	}
 
-	public boolean processServerResponse(Selector s) {
+	public String processServerResponse(Selector s) {
 		Iterator<SelectionKey> i = s.selectedKeys().iterator();
 		int count;
 
@@ -113,7 +115,7 @@ public class Broker {
 							this.clientID = response.split("=")[1];
 						} else
 							System.out.println("response: " + response);
-						return true;
+						return response;
 					}
 				}
 				i.remove();
@@ -121,7 +123,7 @@ public class Broker {
 				e.printStackTrace();
 			}
 		}
-		return false;
+		return "";
 	}
 
 	public String getCID() {
