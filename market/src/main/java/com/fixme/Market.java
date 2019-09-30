@@ -48,6 +48,7 @@ public class Market {
 		}
 
 		if (!valid.equals("")) {
+			market.setUsername(valid);
 			Colour.out.green("\n\tThis market is now logged in\n");
 			market.marketNIO();
 
@@ -81,7 +82,8 @@ public class Market {
 	// main market method
 	public void marketNIO() {
 		try {
-			ResultSet rSet = conn.query("SELECT na_id FROM markets WHERE ma_username = '" + this.username + "'");
+			System.out.println("username : " + this.username);
+			ResultSet rSet = conn.query("SELECT ma_id FROM markets WHERE ma_username = '" + this.username + "'");
 			if (rSet.next()) {
 				this.id = rSet.getInt("ma_id");
 			}
@@ -156,5 +158,9 @@ public class Market {
 			}
 			// sChannel.close();
 		}
+	}
+
+	public void setUsername(String uName) {
+		this.username = uName;
 	}
 }

@@ -119,10 +119,14 @@ public class RouterServer {
 			clientString = Charset.forName("UTF-8").decode(cBuffer).toString().trim();
 			TimeMessage.print(clientString);
 			// System.out.println("Broker request: " + clientString);
-			if (Pattern.matches("new=1", clientString)) {
+			if (Pattern.matches("new=\\d", clientString)) {
 				Long id = this.nextID();
+				HashMap<String, SocketChannel> blah = new HashMap<String, SocketChannel>();
 				String respString = "connected=" + id;
-				// brokers.put(Long.toString(id), sc);
+
+				blah.put(Long.toString(id), sc);
+				brokers.put(clientString.split("=")[1], blah);
+
 				cBuffer.flip();
 				cBuffer.clear();
 				cBuffer.put(respString.getBytes());
@@ -133,7 +137,7 @@ public class RouterServer {
 				// String someString = this.broadcast(clientString, this.marketChannel);
 				cBuffer.flip();
 				cBuffer.clear();
-				cBuffer.put("server messa".getBytes());
+				cBuffer.put("server message".getBytes());
 				cBuffer.flip();
 				cBuffer.rewind();
 				sc.write(cBuffer);
@@ -148,10 +152,14 @@ public class RouterServer {
 		if (count > 0) {
 			cBuffer.flip();
 			clientString = Charset.forName("UTF-8").decode(cBuffer).toString();
-			if (Pattern.matches("new=1", clientString)) {
+			if (Pattern.matches("new=\\d", clientString)) {
 				Long id = this.nextID();
+				HashMap<String, SocketChannel> blah = new HashMap<String, SocketChannel>();
 				String respString = "connected=" + id;
-				// markets.put(Long.toString(id), sc);
+
+				blah.put(Long.toString(id), sc);
+				markets.put(clientString.split("=")[1], blah);
+
 				cBuffer.flip();
 				cBuffer.clear();
 				cBuffer.put(respString.getBytes());
