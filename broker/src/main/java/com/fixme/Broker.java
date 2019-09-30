@@ -43,22 +43,22 @@ public class Broker {
 		}
 
 		if (valid) {
-			// Colour.out.green("\n\tYThis broker is now logged in\n");
+			Colour.out.green("\n\tYThis broker is now logged in\n");
 			try {
 				broker.createConnection();
-				// while (true) {
-				// System.out.print("Instruction (buy|sell) : ");
-				// String instr = scn.nextLine().trim();
-				// if (instr.trim().equalsIgnoreCase("buy")) {
-				// BrokerHandler.brokerBuy();
-				// } else if (instr.trim().equalsIgnoreCase("sell")) {
-				// BrokerHandler.brokerSell();
-				// } else {
-				// System.out.println("Invalid instruction");
-				// }
+				while (true) {
+					System.out.print("Instruction (buy|sell) : ");
+					String instr = scn.nextLine().trim();
+					if (instr.trim().equalsIgnoreCase("buy")) {
+						BrokerHandler.brokerBuy(broker.getCID(), broker);
+					} else if (instr.trim().equalsIgnoreCase("sell")) {
+						BrokerHandler.brokerSell(broker.getCID(), broker);
+					} else {
+						System.out.println("Invalid instruction");
+					}
 
-				// // broker.getResponseFromServer(scn.nextLine().trim());
-				// }
+					// // broker.getResponseFromServer(scn.nextLine().trim());
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -114,8 +114,9 @@ public class Broker {
 						String response = Charset.forName("UTF-8").decode(bb).toString().trim();
 						if (Pattern.matches("connected=\\d{6}$", response)) {
 							this.clientID = response.split("=")[1];
-						} else
+						} else {
 							System.out.println("response: " + response);
+						}
 						return true;
 					}
 				}
@@ -125,6 +126,10 @@ public class Broker {
 			}
 		}
 		return false;
+	}
+
+	public String getCID() {
+		return this.clientID;
 	}
 
 }

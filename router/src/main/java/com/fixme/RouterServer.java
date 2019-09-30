@@ -129,13 +129,14 @@ public class RouterServer {
 				cBuffer.rewind();
 				sc.write(cBuffer);
 			} else {
-				String someString = this.broadcast(clientString, this.marketChannel);
+				System.out.println("plop");
+				// String someString = this.broadcast(clientString, this.marketChannel);
 				cBuffer.flip();
 				cBuffer.clear();
-				cBuffer.put(someString.getBytes());
+				cBuffer.put("plop-------".getBytes());
 				cBuffer.flip();
 				cBuffer.rewind();
-				this.brokerChannel.write(cBuffer);
+				sc.write(cBuffer);
 			}
 		}
 	}
