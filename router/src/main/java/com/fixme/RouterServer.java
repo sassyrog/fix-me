@@ -105,7 +105,7 @@ public class RouterServer {
 			break;
 		case 5001:
 			this.marketChannel = sChannel;
-			processMarket(cBuffer);
+			processMarket(cBuffer, sChannel);
 			this.marketChannel.register(s, SelectionKey.OP_WRITE);
 			break;
 		}
@@ -113,7 +113,6 @@ public class RouterServer {
 
 	public void processBrokerToMarket(ByteBuffer cBuffer, SocketChannel sc) throws IOException {
 		String clientString;
-		// if (this.marketChannel.isConnected()) {
 		int count = sc.read(cBuffer);
 		if (count > 0) {
 			cBuffer.flip();
@@ -123,7 +122,6 @@ public class RouterServer {
 				Long id = this.nextID();
 				String respString = "connected=" + id;
 				brokers.put(Long.toString(id), sc);
-				brokers.forEach((key, value) -> System.out.println(key + " " + value));
 				cBuffer.flip();
 				cBuffer.clear();
 				cBuffer.put(respString.getBytes());
@@ -140,17 +138,26 @@ public class RouterServer {
 				this.brokerChannel.write(cBuffer);
 			}
 		}
-		// }
 	}
 
-	public void processMarket(ByteBuffer cBuffer) throws IOException {
+	public void processMarket(ByteBuffer cBuffer, SocketChannel sc) throws IOException {
 		String clientString;
 		// if (this.marketChannel.isConnected()) {
-		int count = this.marketChannel.read(cBuffer);
+		int count = sc.read(cBuffer);
 		if (count > 0) {
 			cBuffer.flip();
 			clientString = Charset.forName("UTF-8").decode(cBuffer).toString();
-			System.out.println("Market request: " + clientString);
+			if (Pattern.matches("new=1", clientString)) {
+				Long id = this.nextID();
+				String respString = "connected=" + id;
+				markets.put(Long.toString(id), sc);
+				cBuffer.flip();
+				cBuffer.clear();
+				cBuffer.put(respString.getBytes());
+				cBuffer.flip();
+				cBuffer.rewind();
+				sc.write(cBuffer);
+			}
 		}
 	}
 
@@ -193,7 +200,7 @@ public class RouterServer {
 	}
 
 	public long nextID() {
-		return (++this.uID);
+		return (++uID);
 	}
 
 	public SocketChannel getMarketChannel() {

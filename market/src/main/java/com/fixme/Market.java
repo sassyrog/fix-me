@@ -9,6 +9,7 @@ import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 import com.fixme.controlers.Colour;
 
@@ -19,6 +20,7 @@ import com.fixme.controlers.Colour;
 public class Market {
 
 	private int port = 5001;
+	private String clientID;
 	private String hostName = "localhost";
 	private ByteBuffer cBuffer = ByteBuffer.allocate(1000);
 	private Auth auth = new Auth();
@@ -85,7 +87,7 @@ public class Market {
 
 			this.cBuffer.flip();
 			this.cBuffer.clear();
-			this.cBuffer.put("hey from market".getBytes());
+			this.cBuffer.put("new=1".getBytes());
 			this.cBuffer.flip();
 			sc.write(cBuffer);
 
@@ -129,15 +131,17 @@ public class Market {
 			cBuffer.flip();
 			String input = Charset.forName("UTF-8").decode(cBuffer).toString();
 			System.out.println("server msg : " + input);
-
-			// Thread.sleep(3000);
-			cBuffer.flip();
-			cBuffer.clear();
-			cBuffer.put("something from the Market".getBytes());
-			cBuffer.flip();
-			cBuffer.rewind();
-			sChannel.write(cBuffer);
-
+			if (Pattern.matches("connected=\\d{6}$", input)) {
+				this.clientID = input.split("=")[1];
+				System.out.println("=====> " + this.clientID);
+			} else {
+				cBuffer.flip();
+				cBuffer.clear();
+				cBuffer.put("something from the Market".getBytes());
+				cBuffer.flip();
+				cBuffer.rewind();
+				sChannel.write(cBuffer);
+			}
 			// sChannel.close();
 		}
 	}

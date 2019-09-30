@@ -9,6 +9,7 @@ import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
 import java.util.Iterator;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 import com.fixme.controlers.Colour;
 
@@ -111,7 +112,10 @@ public class Broker {
 					if (count > 0) {
 						bb.rewind();
 						String response = Charset.forName("UTF-8").decode(bb).toString().trim();
-						System.out.println("response: " + response);
+						if (Pattern.matches("connected=\\d{6}$", response)) {
+							this.clientID = response.split("=")[1];
+						} else
+							System.out.println("response: " + response);
 						return true;
 					}
 				}
