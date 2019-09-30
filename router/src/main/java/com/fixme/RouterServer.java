@@ -101,11 +101,11 @@ public class RouterServer {
 		switch (sChannel.socket().getLocalPort()) {
 		case 5000:
 			processBrokerToMarket(cBuffer, sChannel);
-			// sChannel.register(s, SelectionKey.OP_READ);
+			sChannel.register(s, SelectionKey.OP_READ);
 			break;
 		case 5001:
 			processMarket(cBuffer, sChannel);
-			// sChannel.register(s, SelectionKey.OP_READ);
+			sChannel.register(s, SelectionKey.OP_READ);
 			break;
 		}
 	}

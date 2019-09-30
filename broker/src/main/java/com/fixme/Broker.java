@@ -88,25 +88,24 @@ public class Broker {
 		Selector selector = Selector.open();
 		this.sChannel.register(selector, SelectionKey.OP_READ);
 		while (true) {
-			if (selector.select() > 0) {
-				if (processServerResponse(selector)) {
+			if (selector.select() > 0)
+				if (processServerResponse(selector))
 					return;
-				}
-			}
 		}
 	}
 
 	public boolean processServerResponse(Selector s) {
 		Iterator<SelectionKey> i = s.selectedKeys().iterator();
+		int count;
+
 		while (i.hasNext()) {
 			try {
 				SelectionKey sk = i.next();
 				if (sk.isReadable()) {
-					SocketChannel schannel = (SocketChannel) sk.channel();
+					SocketChannel sc = (SocketChannel) sk.channel();
 					bb.flip();
 					bb.clear();
-
-					int count = schannel.read(bb);
+					count = sc.read(bb);
 					if (count > 0) {
 						bb.flip();
 						String response = Charset.forName("UTF-8").decode(bb).toString().trim();
