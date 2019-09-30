@@ -20,7 +20,7 @@ import com.fixme.controlers.TimeMessage;
  */
 public class RouterServer {
 	private int ports[] = new int[] { 5000, 5001 };
-	private long uID = 99999;
+	private static long uID = 99999;
 	// Router assigned id and Socket channel
 	HashMap<String, SocketChannel> markets;
 	// Router assigned id, broker id and Socket channel
@@ -100,8 +100,7 @@ public class RouterServer {
 
 		switch (sChannel.socket().getLocalPort()) {
 		case 5000:
-			this.brokerChannel = sChannel;
-			processBrokerToMarket(cBuffer);
+			processBrokerToMarket(cBuffer, sChannel);
 			sChannel.register(s, SelectionKey.OP_WRITE);
 			break;
 		case 5001:
@@ -112,27 +111,36 @@ public class RouterServer {
 		}
 	}
 
-	public void processBrokerToMarket(ByteBuffer cBuffer) throws IOException {
+	public void processBrokerToMarket(ByteBuffer cBuffer, SocketChannel sc) throws IOException {
 		String clientString;
-		if (this.marketChannel.isConnected()) {
-			int count = this.brokerChannel.read(cBuffer);
-			if (count > 0) {
+		// if (this.marketChannel.isConnected()) {
+		int count = sc.read(cBuffer);
+		if (count > 0) {
+			cBuffer.flip();
+			clientString = Charset.forName("UTF-8").decode(cBuffer).toString().trim();
+			System.out.println("Broker request: " + clientString);
+			if (Pattern.matches("new=1", clientString)) {
+				Long id = this.nextID();
+				String respString = "connected=" + id;
+				brokers.put(Long.toString(id), sc);
+				brokers.forEach((key, value) -> System.out.println(key + " " + value));
 				cBuffer.flip();
-				clientString = Charset.forName("UTF-8").decode(cBuffer).toString().trim();
-				System.out.println("Broker request: " + clientString);
-				if (Pattern.matches("new=1", clientString)) {
-					System.out.println("new =  1 baby");
-				} else {
-					String someString = this.broadcast(clientString, this.marketChannel);
-					cBuffer.flip();
-					cBuffer.clear();
-					cBuffer.put(someString.getBytes());
-					cBuffer.flip();
-					cBuffer.rewind();
-					this.brokerChannel.write(cBuffer);
-				}
+				cBuffer.clear();
+				cBuffer.put(respString.getBytes());
+				cBuffer.flip();
+				cBuffer.rewind();
+				sc.write(cBuffer);
+			} else {
+				String someString = this.broadcast(clientString, this.marketChannel);
+				cBuffer.flip();
+				cBuffer.clear();
+				cBuffer.put(someString.getBytes());
+				cBuffer.flip();
+				cBuffer.rewind();
+				this.brokerChannel.write(cBuffer);
 			}
 		}
+		// }
 	}
 
 	public void processMarket(ByteBuffer cBuffer) throws IOException {
