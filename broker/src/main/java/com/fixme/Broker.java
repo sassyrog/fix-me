@@ -7,17 +7,21 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
 import com.fixme.controlers.Colour;
+import com.fixme.controlers.MysqlConnect;
 
 /**
  * Hello world!
  *
  */
 public class Broker {
+	static private MysqlConnect conn = MysqlConnect.getDbCon();
 	private Auth auth = new Auth();
 	private int port = 5000;
 	private String hostName = "localhost";
@@ -25,10 +29,12 @@ public class Broker {
 	private SocketChannel sChannel;
 	private InetSocketAddress addr;
 	private String clientID;
+	private int id;
+	private String username;
 
 	public static void main(String[] args) {
 		Broker broker = new Broker();
-		boolean valid = false;
+		String valid = "";
 		Scanner scn = new Scanner(System.in);
 
 		String choice = "";
@@ -42,7 +48,8 @@ public class Broker {
 			valid = broker.getAuth().login();
 		}
 
-		if (valid) {
+		if (!valid.equals("")) {
+			broker.setUsername(valid);
 			Colour.out.green("\n\tThis broker is now logged in\n");
 			try {
 				broker.createConnection();
@@ -59,16 +66,29 @@ public class Broker {
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
+			} catch (SQLException se) {
+				se.printStackTrace();
 			}
 		}
 		scn.close();
+	}
+
+	private void setUsername(String valid) {
+		this.username = valid;
 	}
 
 	public Auth getAuth() {
 		return this.auth;
 	}
 
-	public void createConnection() throws IOException {
+	public void createConnection() throws IOException, SQLException {
+		ResultSet rSet = conn.query("SELECT br_id FROM brokers WHERE br_username = '" + this.username + "'");
+		if (rSet.next()) {
+			this.id = rSet.getInt("br_id");
+		}
+
+		System.out.println("======> id : " + this.id);
+
 		this.sChannel = SocketChannel.open();
 		this.addr = new InetSocketAddress(this.hostName, this.port);
 		this.sChannel.configureBlocking(false);
@@ -76,7 +96,7 @@ public class Broker {
 		while (!sChannel.finishConnect()) {
 			System.out.println("connecting to server...");
 		}
-		getResponseFromServer("new=1");
+		getResponseFromServer("new=" + this.id);
 	}
 
 	public String getResponseFromServer(String request) throws IOException {

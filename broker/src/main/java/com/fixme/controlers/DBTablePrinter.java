@@ -504,7 +504,7 @@ public class DBTablePrinter {
              * At this point we have gone through meta data, get the columns and created all
              * Column objects, iterated over the ResultSet rows, populated the column values
              * and adjusted the column widths.
-             *
+             * 
              * We cannot start printing just yet because we have to prepare a row separator
              * String.
              */
@@ -569,8 +569,12 @@ public class DBTablePrinter {
                 sj.add(name);
             }
 
+            String info = "Printing " + rowCount;
+            info += rowCount > 1 ? " rows from " : " row from ";
+            info += tableNames.size() > 1 ? "tables " : "table ";
+            info += sj.toString();
 
-            System.out.println("");
+            System.out.println(info);
 
             // Print out the formatted column labels
             System.out.print(strToPrint.toString());

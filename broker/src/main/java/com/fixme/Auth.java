@@ -24,7 +24,7 @@ public class Auth {
 	public Auth() {
 	}
 
-	public boolean signUp() {
+	public String signUp() {
 		name = "";
 		username = "";
 		password1 = "";
@@ -58,10 +58,10 @@ public class Auth {
 			}
 		}
 		signUpDB();
-		return true;
+		return this.username;
 	}
 
-	public boolean login() {
+	public String login() {
 		username = "";
 		password1 = "";
 		while (username.equals("") || password1.equals("")) {
@@ -101,7 +101,7 @@ public class Auth {
 		}
 	}
 
-	private boolean loginDB() {
+	private String loginDB() {
 		try {
 			ResultSet rSet = conn
 					.query("SELECT br_username, br_password FROM brokers WHERE br_username = '" + this.username + "'");
@@ -109,7 +109,7 @@ public class Auth {
 				String pHash = rSet.getString("br_password");
 				BCrypt.Result res = BCrypt.verifyer().verify(this.password1.toCharArray(), pHash);
 				if (res.verified) {
-					return true;
+					return this.username;
 				} else {
 					System.out.println("\nCould not login. Please make sure username and password are correct");
 					this.login();
@@ -121,6 +121,6 @@ public class Auth {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return false;
+		return "";
 	}
 }
