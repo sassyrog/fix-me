@@ -9,8 +9,10 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import com.fixme.controlers.TimeMessage;
@@ -126,20 +128,17 @@ public class RouterServer {
 				blah.put(Long.toString(id), sc);
 				brokers.put(clientString.split("=")[1], blah);
 
-				cBuffer.flip();
-				cBuffer.clear();
-				cBuffer.put(respString.getBytes());
-				cBuffer.flip();
-				cBuffer.rewind();
-				sc.write(cBuffer);
+				socketWrite(respString, sc, cBuffer);
 			} else {
-				// String someString = this.broadcast(clientString, this.marketChannel);
-				cBuffer.flip();
-				cBuffer.clear();
-				cBuffer.put("server message".getBytes());
-				cBuffer.flip();
-				cBuffer.rewind();
-				sc.write(cBuffer);
+				String availableMarkets = "";
+				if (clientString.equalsIgnoreCase("markets")) {
+					availableMarkets = getAvailableMarkets();
+					System.out.println("hash : " + this.markets);
+					socketWrite(availableMarkets, sc, cBuffer);
+				} else {
+					// String someString = this.broadcast(clientString, this.marketChannel);
+					socketWrite("server message", sc, cBuffer);
+				}
 			}
 		}
 	}
@@ -158,13 +157,7 @@ public class RouterServer {
 
 				blah.put(Long.toString(id), sc);
 				markets.put(clientString.split("=")[1], blah);
-
-				cBuffer.flip();
-				cBuffer.clear();
-				cBuffer.put(respString.getBytes());
-				cBuffer.flip();
-				cBuffer.rewind();
-				sc.write(cBuffer);
+				socketWrite(respString, sc, cBuffer);
 			}
 		}
 	}
@@ -217,5 +210,29 @@ public class RouterServer {
 
 	public SocketChannel getBrokerChannel() {
 		return this.brokerChannel;
+	}
+
+	public String getAvailableMarkets() {
+		List<String> ids = new ArrayList<String>();
+		for (String key : this.markets.keySet()) {
+			HashMap<String, SocketChannel> gg = markets.get(key);
+			if (gg.get(gg.keySet().stream().findFirst().get()).isConnected()) {
+				System.out.println("connected!!!!!!!!!!!!!!!!!!");
+				ids.add(key);
+			} else {
+				System.out.println("not connected!!!!!!!!!!!!!!!!!!");
+				markets.remove(key);
+			}
+		}
+		return String.join(",", ids);
+	}
+
+	public void socketWrite(String msg, SocketChannel sc, ByteBuffer bb) throws IOException {
+		bb.flip();
+		bb.clear();
+		bb.put(msg.getBytes());
+		bb.flip();
+		bb.rewind();
+		sc.write(bb);
 	}
 }
