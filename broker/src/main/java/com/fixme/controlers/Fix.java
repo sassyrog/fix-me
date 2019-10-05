@@ -10,7 +10,10 @@ public class Fix {
 	public Fix() {
 	}
 
-	public String encode() {
+	public String encode(int id, int quantity) {
+		String fixString = "";
+		String fixString2 = "";
+		fixString += "8=FIX-42|";
 		return "";
 	}
 }

@@ -8,6 +8,7 @@ import java.util.Scanner;
 
 import com.fixme.controlers.Colour;
 import com.fixme.controlers.DBTablePrinter;
+import com.fixme.controlers.Fix;
 import com.fixme.controlers.MysqlConnect;
 
 /**
@@ -16,6 +17,7 @@ import com.fixme.controlers.MysqlConnect;
 public class BrokerHandler {
 	static private MysqlConnect conn = MysqlConnect.getDbCon();
 	static Scanner scanner = new Scanner(System.in);
+	static Fix fix = new Fix();
 
 	static public String brokerBuy(String clientID, Broker broker) {
 		try {
@@ -56,7 +58,7 @@ public class BrokerHandler {
 		return "blah";
 	}
 
-	public static void processBuy(String clientID, Broker broker) {
+	public static String processBuy(String clientID, Broker broker) {
 		System.out.println("Please choose the instrument you want to buy\n");
 
 		int id = inputID();
@@ -64,11 +66,11 @@ public class BrokerHandler {
 
 		System.out.print("Are all purchase details above correct? (y|n) : ");
 		String correct = scanner.nextLine().trim();
-		if (correct.equals("y"))
-			System.out.println(correct);
-		else
+		if (correct.equals("y")) {
+			return fix.encode(id, quantity);
+		} else
 			processBuy(clientID, broker);
-
+		return "";
 	}
 
 	public static int inputID() {

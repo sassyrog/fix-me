@@ -83,19 +83,14 @@ public class Broker {
 
 	public void createConnection() throws IOException, SQLException {
 		ResultSet rSet = conn.query("SELECT br_id FROM brokers WHERE br_username = '" + this.username + "'");
-		if (rSet.next()) {
+		if (rSet.next())
 			this.id = rSet.getInt("br_id");
-		}
-
-		System.out.println("======> id : " + this.id);
-
 		this.sChannel = SocketChannel.open();
 		this.addr = new InetSocketAddress(this.hostName, this.port);
 		this.sChannel.configureBlocking(false);
 		this.sChannel.connect(addr);
-		while (!sChannel.finishConnect()) {
+		while (!sChannel.finishConnect())
 			System.out.println("connecting to server...");
-		}
 		getResponseFromServer("new=" + this.id);
 	}
 
