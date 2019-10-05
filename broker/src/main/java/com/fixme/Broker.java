@@ -36,7 +36,6 @@ public class Broker {
 		Broker broker = new Broker();
 		String valid = "";
 		Scanner scn = new Scanner(System.in);
-
 		String choice = "";
 		while (!choice.equals("s") && !choice.equals("l")) {
 			System.out.print("Would you like to sign up or login (s|l): ");
@@ -56,10 +55,12 @@ public class Broker {
 				while (true) {
 					System.out.print("Instruction (buy|sell) : ");
 					String instr = scn.nextLine().trim();
+					BrokerHandler bh = new BrokerHandler(broker.getCID(), broker);
+
 					if (instr.trim().equalsIgnoreCase("buy")) {
-						BrokerHandler.brokerBuy(broker.getCID(), broker);
+						bh.brokerBuy();
 					} else if (instr.trim().equalsIgnoreCase("sell")) {
-						BrokerHandler.brokerSell(broker.getCID(), broker);
+						bh.brokerSell();
 					} else {
 						System.out.println("Invalid instruction");
 					}

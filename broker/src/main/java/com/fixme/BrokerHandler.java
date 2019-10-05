@@ -15,37 +15,33 @@ import com.fixme.controlers.MysqlConnect;
  * BrokerHandler
  */
 public class BrokerHandler {
-	static private MysqlConnect conn = MysqlConnect.getDbCon();
-	static Scanner scanner = new Scanner(System.in);
-	static Fix fix = new Fix();
+	private MysqlConnect conn = MysqlConnect.getDbCon();
+	Scanner scanner = new Scanner(System.in);
+	ResultSet rSet;
+	Fix fix = new Fix();
+	Broker broker;
+	String clientID;
 
-	static public String brokerBuy(String clientID, Broker broker) {
+	public BrokerHandler(String _clientID, Broker _broker) {
+		this.broker = _broker;
+		this.clientID = _clientID;
+	}
+
+	public String brokerBuy() {
 		try {
 			String avMarkets = broker.getResponseFromServer("markets").trim();
 			if (!avMarkets.equals("nada")) {
 				String query = "SELECT inst.inst_id AS 'ID', inst.inst_name AS 'Name', inst.inst_amount AS 'Quantity Available', ma.ma_name AS 'Market' FROM instruments inst INNER JOIN markets ma ON inst.inst_ma_id = ma.ma_id WHERE ma.ma_id IN ("
 						+ avMarkets + ")";
-				ResultSet rSet = conn.query(query);
+				rSet = conn.query(query);
 				if (rSet.isBeforeFirst()) {
 					DBTablePrinter.printResultSet(rSet);
-
-					processBuy(clientID, broker);
+					processBuy();
 				} else {
 					Colour.out.red("No instruments to buy!!!\n");
 				}
 			}
-			// System.out.println("====> " + hh);
-			// System.out.println("Here's the list of all available instruments");
-			// ResultSet rSet = conn.query(
-			// "SELECT inst.inst_id AS 'ID', inst.inst_name AS 'Name', inst.inst_amount AS
-			// 'Amount', ma.ma_name AS 'Market' FROM instruments inst INNER JOIN markets ma
-			// ON inst.inst_ma_id = ma.ma_id");
-			// if (rSet.isBeforeFirst()) {
-			// DBTablePrinter.printResultSet(rSet);
-			// } else {
-			// Colour.out.red("No instruments to buy!!!\n");
-			// }
-		} catch (IOException ie) { // SQLException se) {
+		} catch (IOException ie) {
 			ie.printStackTrace();
 		} catch (SQLException se) {
 			se.printStackTrace();
@@ -53,44 +49,44 @@ public class BrokerHandler {
 		return "blah";
 	}
 
-	static public String brokerSell(String clientID, Broker broker) {
+	public String brokerSell() {
 
 		return "blah";
 	}
 
-	public static String processBuy(String clientID, Broker broker) {
+	public String processBuy() {
 		System.out.println("Please choose the instrument you want to buy\n");
 
 		int id = inputID();
 		int quantity = inputQuantity();
 
 		System.out.print("Are all purchase details above correct? (y|n) : ");
-		String correct = scanner.nextLine().trim();
+		String correct = this.scanner.nextLine().trim();
 		if (correct.equals("y")) {
 			return fix.encode(id, quantity);
 		} else
-			processBuy(clientID, broker);
+			processBuy();
 		return "";
 	}
 
-	public static int inputID() {
+	public int inputID() {
 		while (true) {
 			try {
 				System.out.print("Instrument ID : ");
-				return scanner.nextInt();
+				return this.scanner.nextInt();
 			} catch (InputMismatchException ime) {
-				scanner.nextLine();
+				this.scanner.nextLine();
 			}
 		}
 	}
 
-	public static int inputQuantity() {
+	public int inputQuantity() {
 		while (true) {
 			try {
 				System.out.print("Quantity : ");
-				return scanner.nextInt();
+				return this.scanner.nextInt();
 			} catch (InputMismatchException ime) {
-				scanner.nextLine();
+				this.scanner.nextLine();
 			}
 		}
 	}
