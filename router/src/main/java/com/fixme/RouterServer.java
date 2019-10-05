@@ -127,13 +127,11 @@ public class RouterServer {
 
 				blah.put(Long.toString(id), sc);
 				brokers.put(clientString.split("=")[1], blah);
-
 				socketWrite(respString, sc, cBuffer);
 			} else {
 				String availableMarkets = "";
 				if (clientString.equalsIgnoreCase("markets")) {
 					availableMarkets = getAvailableMarkets().trim();
-					System.out.println("hash : " + this.markets);
 					if (availableMarkets.equals("")) {
 						availableMarkets = "nada";
 						socketWrite(availableMarkets, sc, cBuffer);
