@@ -84,7 +84,7 @@ public class BrokerHandler {
 					}
 				}
 			} catch (InputMismatchException ime) {
-				// this.scanner.nextLine();
+				this.scanner.nextLine();
 			}
 		}
 	}
@@ -102,7 +102,7 @@ public class BrokerHandler {
 					}
 				}
 			} catch (InputMismatchException ime) {
-				// this.scanner.nextLine();
+				this.scanner.nextLine();
 			}
 		}
 	}
