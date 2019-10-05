@@ -19,8 +19,18 @@ public class BrokerHandler {
 
 	static public String brokerBuy(String clientID, Broker broker) {
 		try {
-			String hh = broker.getResponseFromServer("markets");
-			System.out.println("====> " + hh);
+			String avMarkets = broker.getResponseFromServer("markets").trim();
+			if (!avMarkets.equals("nada")) {
+				String query = "SELECT inst.inst_id AS 'ID', inst.inst_name AS 'Name', inst.inst_amount AS 'Amount Available', ma.ma_name AS 'Market' FROM instruments inst INNER JOIN markets ma ON inst.inst_ma_id = ma.ma_id WHERE ma.ma_id IN ("
+						+ avMarkets + ")";
+				ResultSet rSet = conn.query(query);
+				if (rSet.isBeforeFirst()) {
+					DBTablePrinter.printResultSet(rSet);
+				} else {
+					Colour.out.red("No instruments to buy!!!\n");
+				}
+			}
+			// System.out.println("====> " + hh);
 			// System.out.println("Here's the list of all available instruments");
 			// ResultSet rSet = conn.query(
 			// "SELECT inst.inst_id AS 'ID', inst.inst_name AS 'Name', inst.inst_amount AS
@@ -33,7 +43,8 @@ public class BrokerHandler {
 			// }
 		} catch (IOException ie) { // SQLException se) {
 			ie.printStackTrace();
-			// // TODO: handle exception
+		} catch (SQLException se) {
+			se.printStackTrace();
 		}
 		return "blah";
 	}
