@@ -33,9 +33,10 @@ public class BrokerHandler {
 			if (!avMarkets.equals("nada")) {
 				String query = "SELECT inst.inst_id AS 'ID', inst.inst_name AS 'Name', inst.inst_amount AS 'Quantity Available', ma.ma_name AS 'Market' FROM instruments inst INNER JOIN markets ma ON inst.inst_ma_id = ma.ma_id WHERE ma.ma_id IN ("
 						+ avMarkets + ")";
-				rSet = conn.query(query);
+				this.rSet = conn.query(query);
 				if (rSet.isBeforeFirst()) {
 					DBTablePrinter.printResultSet(rSet);
+					rSet.beforeFirst();
 					processBuy();
 				} else {
 					Colour.out.red("No instruments to buy!!!\n");
@@ -54,7 +55,7 @@ public class BrokerHandler {
 		return "blah";
 	}
 
-	public String processBuy() {
+	public String processBuy() throws SQLException {
 		System.out.println("Please choose the instrument you want to buy\n");
 
 		int id = inputID();
@@ -64,29 +65,44 @@ public class BrokerHandler {
 		String correct = this.scanner.nextLine().trim();
 		if (correct.equals("y")) {
 			return fix.encode(id, quantity);
-		} else
+		} else {
 			processBuy();
+		}
 		return "";
 	}
 
-	public int inputID() {
+	public int inputID() throws SQLException {
+		int id;
 		while (true) {
 			try {
 				System.out.print("Instrument ID : ");
-				return this.scanner.nextInt();
+				id = this.scanner.nextInt();
+				while (this.rSet.next()) {
+					if (this.rSet.getInt("ID") == id) {
+						this.rSet.beforeFirst();
+						return id;
+					}
+				}
 			} catch (InputMismatchException ime) {
-				this.scanner.nextLine();
+				// this.scanner.nextLine();
 			}
 		}
 	}
 
-	public int inputQuantity() {
+	public int inputQuantity() throws SQLException {
+		int quantity;
 		while (true) {
 			try {
 				System.out.print("Quantity : ");
-				return this.scanner.nextInt();
+				quantity = this.scanner.nextInt();
+				while (this.rSet.next()) {
+					if (quantity < rSet.getFloat("Quantity Available")) {
+						rSet.beforeFirst();
+						return quantity;
+					}
+				}
 			} catch (InputMismatchException ime) {
-				this.scanner.nextLine();
+				// this.scanner.nextLine();
 			}
 		}
 	}
