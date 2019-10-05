@@ -59,7 +59,7 @@ public class BrokerHandler {
 		System.out.println("Please choose the instrument you want to buy\n");
 
 		int id = inputID();
-		int quantity = inputQuantity();
+		int quantity = inputQuantity(id);
 
 		System.out.print("Are all purchase details above correct? (y|n) : ");
 		String correct = this.scanner.nextLine().trim();
@@ -78,29 +78,34 @@ public class BrokerHandler {
 				System.out.print("Instrument ID : ");
 				id = this.scanner.nextInt();
 				while (this.rSet.next()) {
+					System.out.println("id ===> " + this.rSet.getInt("ID"));
 					if (this.rSet.getInt("ID") == id) {
 						this.rSet.beforeFirst();
 						return id;
 					}
 				}
+				rSet.beforeFirst();
 			} catch (InputMismatchException ime) {
 				this.scanner.nextLine();
 			}
 		}
 	}
 
-	public int inputQuantity() throws SQLException {
+	public int inputQuantity(int id) throws SQLException {
 		int quantity;
 		while (true) {
 			try {
 				System.out.print("Quantity : ");
 				quantity = this.scanner.nextInt();
 				while (this.rSet.next()) {
-					if (quantity < rSet.getFloat("Quantity Available")) {
-						rSet.beforeFirst();
-						return quantity;
+					if (this.rSet.getInt("ID") == id) {
+						if (quantity < rSet.getFloat("Quantity Available")) {
+							rSet.beforeFirst();
+							return quantity;
+						}
 					}
 				}
+				rSet.beforeFirst();
 			} catch (InputMismatchException ime) {
 				this.scanner.nextLine();
 			}
