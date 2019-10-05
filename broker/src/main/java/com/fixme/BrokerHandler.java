@@ -1,9 +1,9 @@
 package com.fixme;
 
 import java.io.IOException;
-import java.nio.channels.SocketChannel;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import com.fixme.controlers.Colour;
@@ -26,6 +26,8 @@ public class BrokerHandler {
 				ResultSet rSet = conn.query(query);
 				if (rSet.isBeforeFirst()) {
 					DBTablePrinter.printResultSet(rSet);
+
+					processBuy(clientID, broker);
 				} else {
 					Colour.out.red("No instruments to buy!!!\n");
 				}
@@ -52,5 +54,42 @@ public class BrokerHandler {
 	static public String brokerSell(String clientID, Broker broker) {
 
 		return "blah";
+	}
+
+	public static void processBuy(String clientID, Broker broker) {
+		System.out.println("Please choose the instrument you want to buy\n");
+
+		int id = inputID();
+		int quantity = inputQuantity();
+
+		System.out.print("Are all purchase details above correct? (y|n) : ");
+		String correct = scanner.nextLine().trim();
+		if (correct.equals("y"))
+			System.out.println(correct);
+		else
+			processBuy(clientID, broker);
+
+	}
+
+	public static int inputID() {
+		while (true) {
+			try {
+				System.out.print("Instrument ID : ");
+				return scanner.nextInt();
+			} catch (InputMismatchException ime) {
+				scanner.nextLine();
+			}
+		}
+	}
+
+	public static int inputQuantity() {
+		while (true) {
+			try {
+				System.out.print("Quantity : ");
+				return scanner.nextInt();
+			} catch (InputMismatchException ime) {
+				scanner.nextLine();
+			}
+		}
 	}
 }
