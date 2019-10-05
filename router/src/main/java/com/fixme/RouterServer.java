@@ -119,7 +119,7 @@ public class RouterServer {
 		if (count > 0) {
 			cBuffer.flip();
 			clientString = Charset.forName("UTF-8").decode(cBuffer).toString().trim();
-			TimeMessage.print(clientString);
+			// TimeMessage.print(clientString);
 			if (Pattern.matches("new=\\d", clientString)) {
 				Long id = this.nextID();
 				HashMap<String, SocketChannel> blah = new HashMap<String, SocketChannel>();

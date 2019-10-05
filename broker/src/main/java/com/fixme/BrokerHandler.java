@@ -21,7 +21,7 @@ public class BrokerHandler {
 		try {
 			String avMarkets = broker.getResponseFromServer("markets").trim();
 			if (!avMarkets.equals("nada")) {
-				String query = "SELECT inst.inst_id AS 'ID', inst.inst_name AS 'Name', inst.inst_amount AS 'Amount Available', ma.ma_name AS 'Market' FROM instruments inst INNER JOIN markets ma ON inst.inst_ma_id = ma.ma_id WHERE ma.ma_id IN ("
+				String query = "SELECT inst.inst_id AS 'ID', inst.inst_name AS 'Name', inst.inst_amount AS 'Quantity Available', ma.ma_name AS 'Market' FROM instruments inst INNER JOIN markets ma ON inst.inst_ma_id = ma.ma_id WHERE ma.ma_id IN ("
 						+ avMarkets + ")";
 				ResultSet rSet = conn.query(query);
 				if (rSet.isBeforeFirst()) {
