@@ -132,9 +132,13 @@ public class RouterServer {
 			} else {
 				String availableMarkets = "";
 				if (clientString.equalsIgnoreCase("markets")) {
-					availableMarkets = getAvailableMarkets();
+					availableMarkets = getAvailableMarkets().trim();
 					System.out.println("hash : " + this.markets);
-					socketWrite(availableMarkets, sc, cBuffer);
+					if (availableMarkets.equals("")) {
+						availableMarkets = "nada";
+						socketWrite(availableMarkets, sc, cBuffer);
+					} else
+						socketWrite(availableMarkets, sc, cBuffer);
 				} else {
 					// String someString = this.broadcast(clientString, this.marketChannel);
 					socketWrite("server message", sc, cBuffer);
@@ -216,11 +220,12 @@ public class RouterServer {
 		List<String> ids = new ArrayList<String>();
 		for (String key : this.markets.keySet()) {
 			HashMap<String, SocketChannel> gg = markets.get(key);
-			if (gg.get(gg.keySet().stream().findFirst().get()).isConnected()) {
-				System.out.println("connected!!!!!!!!!!!!!!!!!!");
+			try {
+				ByteBuffer bb = ByteBuffer.allocate(15);
+				bb.flip();
+				socketWrite("connection test", gg.get(gg.keySet().stream().findFirst().get()), bb);
 				ids.add(key);
-			} else {
-				System.out.println("not connected!!!!!!!!!!!!!!!!!!");
+			} catch (IOException e) {
 				markets.remove(key);
 			}
 		}
