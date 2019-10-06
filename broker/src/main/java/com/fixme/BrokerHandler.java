@@ -63,7 +63,9 @@ public class BrokerHandler {
 
 		System.out.printf("Are all purchase details above correct? (y|n) : ");
 
-		if (this.scanner.next().equals("y")) {
+		String correct = this.scanner.next().trim();
+
+		if (correct.equals("y") || correct.equals("Y")) {
 			return fix.encode(id, quantity);
 		} else {
 			processBuy();

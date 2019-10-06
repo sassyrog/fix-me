@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.regex.Pattern;
 
+import com.fixme.controlers.Colour;
 import com.fixme.controlers.MysqlConnect;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;;
@@ -40,17 +41,17 @@ public class Auth {
 
 			System.out.println();
 			if (name.equals(""))
-				System.out.println("\u001B[1;31mBroker Name cannot be empty\u001B[0m");
+				Colour.out.red("Broker Name cannot be empty");
 			else if (!Pattern.matches("^[a-zA-Z ]\'?[-a-zA-Z ]+$", name))
-				System.out.println("\u001B[1;31mName not right\u001B[0m");
+				Colour.out.red("Name not right");
 			else if (username.equals(""))
-				System.out.println("\u001B[1;31mUsername cannot be empty\u001B[0m");
+				Colour.out.red("Username cannot be empty");
 			else if (!Pattern.matches("^[a-zA-Z0-9_]+$", username))
-				System.out.println("\u001B[1;31mUsername not right\u001B[0m");
+				Colour.out.red("Username not right");
 			else if (password1.equals(""))
-				System.out.println("\u001B[1;31mPassword cannot be empty\u001B[0m");
+				Colour.out.red("Password cannot be empty");
 			else if (!password2.equals(password1))
-				System.out.println("\u001B[1;31mPasswords don't match\u001B[0m");
+				Colour.out.red("Passwords don't match");
 			else {
 				String coor = console.readLine("\u001B[1;37mIs all the info above correct? (y|n) (Y|N) : \u001B[0m");
 				if (coor.equals("y") || coor.equals("Y"))
@@ -70,9 +71,9 @@ public class Auth {
 			password1 = new String(console.readPassword("Password : ")).trim();
 
 			if (username.equals(""))
-				System.out.println("\u001B[1;31mUsername cannot be empty\u001B[0m");
+				Colour.out.red("Username cannot be empty");
 			else if (password1.equals(""))
-				System.out.println("\u001B[1;31mPassword cannot be empty\u001B[0m");
+				Colour.out.red("Password cannot be empty");
 			else {
 				break;
 			}
@@ -85,7 +86,7 @@ public class Auth {
 			ResultSet rSet = conn.query("SELECT 1 FROM brokers WHERE br_username = '" + this.username + "'");
 
 			if (rSet.next()) {
-				System.out.println("Username already exists!!!");
+				Colour.out.red("Username already exists!!!");
 				signUp();
 			} else {
 				String pHash = BCrypt.withDefaults().hashToString(10, this.password1.toCharArray());
@@ -111,11 +112,11 @@ public class Auth {
 				if (res.verified) {
 					return this.username;
 				} else {
-					System.out.println("\nCould not login. Please make sure username and password are correct");
+					Colour.out.red("\nCould not login. Please make sure username and password are correct");
 					return this.login();
 				}
 			} else {
-				System.out.println("\nCould not find username. Please make sure username is correct");
+				Colour.out.red("\nCould not find username. Please make sure username is correct");
 				return this.login();
 			}
 		} catch (SQLException e) {

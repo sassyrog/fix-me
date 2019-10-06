@@ -11,6 +11,7 @@ public class Fix {
 	}
 
 	public String encode(int id, int quantity) {
+		System.out.println("yeah");
 		String fixString = "";
 		String fixString2 = "";
 		fixString += "8=FIX-42|";
