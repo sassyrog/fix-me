@@ -13,7 +13,7 @@ if [ "$USER" = "rmdaba" ] ; then
 	-e "ALTER TABLE brokers MODIFY br_id bigint(20) NOT NULL AUTO_INCREMENT;" \
 	-e "CREATE TABLE fixme.instruments ( \
 		inst_id INT NOT NULL AUTO_INCREMENT , \
-		inst_name VARCHAR(255) NOT NULL , \
+		inst_no INT NOT NULL , \
 		inst_amount FLOAT NOT NULL COMMENT 'per unit measure' , \
 		inst_unit VARCHAR(25) NOT NULL , \
 		inst_ma_id INT NOT NULL , \
@@ -26,8 +26,14 @@ if [ "$USER" = "rmdaba" ] ; then
 		ma_username VARCHAR(255) NOT NULL , \
 		ma_password VARCHAR(255) NOT NULL , \
 		ma_deleted TINYINT(1) NOT NULL DEFAULT '0' , \
-		PRIMARY KEY  (ma_id)) ENGINE = InnoDB;"
-	# -e "ALTER TABLE brokers AUTO_INCREMENT=100000;"
+		PRIMARY KEY  (ma_id)) ENGINE = InnoDB;" \
+	-e "CREATE TABLE fixme.instrument_types ( \
+		it_no INT NOT NULL , \
+		it_name VARCHAR(32) NOT NULL ) ENGINE = InnoDB;" \
+	-e "INSERT INTO instrument_types(it_no, it_name) VALUES (1, 'Gold');" \
+	-e "INSERT INTO instrument_types(it_no, it_name) VALUES (2, 'Platinum');" \
+	-e "INSERT INTO instrument_types(it_no, it_name) VALUES (3, 'Oil');" \
+	-e "INSERT INTO instrument_types(it_no, it_name) VALUES (4, 'Sugar');"
 else
 	mysql --host=localhost --user=root --password="Rootroot3" \
 	-e "CREATE DATABASE IF NOT EXISTS fixme;" -e "USE fixme;" \
@@ -43,7 +49,7 @@ else
 	-e "ALTER TABLE brokers MODIFY br_id bigint(20) NOT NULL AUTO_INCREMENT;" \
 	-e "CREATE TABLE fixme.instruments ( \
 		inst_id INT NOT NULL AUTO_INCREMENT , \
-		inst_name VARCHAR(255) NOT NULL , \
+		inst_no INT NOT NULL , \
 		inst_amount FLOAT NOT NULL COMMENT 'per unit measure' , \
 		inst_unit VARCHAR(25) NOT NULL , \
 		inst_ma_id INT NOT NULL , \
@@ -56,6 +62,13 @@ else
 		ma_username VARCHAR(255) NOT NULL , \
 		ma_password VARCHAR(255) NOT NULL , \
 		ma_deleted TINYINT(1) NOT NULL DEFAULT '0' , \
-		PRIMARY KEY  (ma_id)) ENGINE = InnoDB;"
+		PRIMARY KEY  (ma_id)) ENGINE = InnoDB;" \
+	-e "CREATE TABLE fixme.instrument_types ( \
+		it_no INT NOT NULL , \
+		it_name VARCHAR(32) NOT NULL ) ENGINE = InnoDB;" \
+	-e "INSERT INTO instrument_types(it_no, it_name) VALUES (1, 'Gold');" \
+	-e "INSERT INTO instrument_types(it_no, it_name) VALUES (2, 'Platinum');" \
+	-e "INSERT INTO instrument_types(it_no, it_name) VALUES (3, 'Oil');" \
+	-e "INSERT INTO instrument_types(it_no, it_name) VALUES (4, 'Sugar');"
 	# -e "ALTER TABLE brokers AUTO_INCREMENT=100000;"
 fi

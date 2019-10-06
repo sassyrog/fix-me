@@ -31,7 +31,7 @@ public class BrokerHandler {
 		try {
 			String avMarkets = broker.getResponseFromServer("markets").trim();
 			if (!avMarkets.equals("nada")) {
-				String query = "SELECT inst.inst_id AS 'ID', inst.inst_name AS 'Name', inst.inst_amount AS 'Quantity Available', ma.ma_name AS 'Market' FROM instruments inst INNER JOIN markets ma ON inst.inst_ma_id = ma.ma_id WHERE ma.ma_id IN ("
+				String query = "SELECT inst.inst_id AS 'ID', it.it_name AS 'Name', inst.inst_amount AS 'Quantity Available', ma.ma_name AS 'Market' FROM instruments inst INNER JOIN markets ma ON inst.inst_ma_id = ma.ma_id INNER JOIN instrument_types it ON it.it_no = inst.inst_no WHERE ma.ma_id IN ("
 						+ avMarkets + ")";
 				this.rSet = conn.query(query);
 				if (rSet.isBeforeFirst()) {
@@ -60,13 +60,16 @@ public class BrokerHandler {
 
 		int id = inputID();
 		int quantity = inputQuantity(id);
+		int targetMarket = inputTargetMarket(id);
+
+		System.out.println("(((((" + targetMarket);
 
 		System.out.printf("Are all purchase details above correct? (y|n) : ");
 
 		String correct = this.scanner.next().trim();
 
 		if (correct.equals("y") || correct.equals("Y")) {
-			return fix.encode(id, quantity);
+			return fix.encode(id, quantity, 1, targetMarket);
 		} else {
 			processBuy();
 		}
@@ -112,5 +115,24 @@ public class BrokerHandler {
 				this.scanner.next();
 			}
 		}
+	}
+
+	public int inputTargetMarket(int id) throws SQLException {
+		ResultSet rrSet = this.conn.query("SELECT inst_ma_id FROM instruments WHERE inst_id = " + id);
+		rrSet.next();
+		return rrSet.getInt("inst_ma_id");
+		// while (true) {
+		// try {
+		// while (this.rSet.next()) {
+		// if (this.rSet.getInt("ID") == id) {
+		// rSet.beforeFirst();
+		// return market;
+		// }
+		// }
+		// rSet.beforeFirst();
+		// } catch (InputMismatchException ime) {
+		// this.scanner.next();
+		// }
+		// }
 	}
 }

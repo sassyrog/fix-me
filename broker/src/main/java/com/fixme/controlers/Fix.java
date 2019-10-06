@@ -10,11 +10,9 @@ public class Fix {
 	public Fix() {
 	}
 
-	public String encode(int id, int quantity) {
-		System.out.println("yeah");
+	public String encode(int id, int quantity, int type, int ma_id) {
 		String fixString = "";
-		String fixString2 = "";
-		fixString += "8=FIX-42|";
+		fixString += "8=FIX-42|9=" + type + "|35=%len%|";
 		return "";
 	}
 }
