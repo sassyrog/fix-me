@@ -37,7 +37,7 @@ public class BrokerHandler {
 				if (rSet.isBeforeFirst()) {
 					DBTablePrinter.printResultSet(rSet);
 					rSet.beforeFirst();
-					processBuy();
+					return processBuy();
 				} else {
 					Colour.out.red("No instruments to buy!!!\n");
 				}
@@ -47,7 +47,7 @@ public class BrokerHandler {
 		} catch (SQLException se) {
 			se.printStackTrace();
 		}
-		return "blah";
+		return "";
 	}
 
 	public String brokerSell() {

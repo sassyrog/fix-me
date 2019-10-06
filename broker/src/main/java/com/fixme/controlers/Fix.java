@@ -23,8 +23,7 @@ public class Fix {
 		fixString += fixString2;
 		fixString += "10=" + checksum(fixString) + "|";
 
-		System.out.println(fixString);
-		return "";
+		return fixString;
 	}
 
 	public String checksum(String s) {
