@@ -83,7 +83,6 @@ public class BrokerHandler {
 				System.out.print("Instrument ID : ");
 				id = this.scanner.nextInt();
 				while (this.rSet.next()) {
-					System.out.println("id ===> " + this.rSet.getInt("ID"));
 					if (this.rSet.getInt("ID") == id) {
 						this.rSet.beforeFirst();
 						return id;
