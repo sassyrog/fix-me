@@ -16,7 +16,7 @@ import com.fixme.controlers.MysqlConnect;
  */
 public class BrokerHandler {
 	private MysqlConnect conn = MysqlConnect.getDbCon();
-	Scanner scanner = new Scanner(System.in);
+	private Scanner scanner = new Scanner(System.in);
 	ResultSet rSet;
 	Fix fix = new Fix();
 	Broker broker;
@@ -56,14 +56,14 @@ public class BrokerHandler {
 	}
 
 	public String processBuy() throws SQLException {
-		System.out.println("Please choose the instrument you want to buy\n");
+		System.out.println("Please choose the instrument you want to buy");
 
 		int id = inputID();
 		int quantity = inputQuantity(id);
 
-		System.out.print("Are all purchase details above correct? (y|n) : ");
-		String correct = this.scanner.nextLine().trim();
-		if (correct.equals("y")) {
+		System.out.printf("Are all purchase details above correct? (y|n) : ");
+
+		if (this.scanner.next().equals("y")) {
 			return fix.encode(id, quantity);
 		} else {
 			processBuy();
@@ -86,7 +86,7 @@ public class BrokerHandler {
 				}
 				rSet.beforeFirst();
 			} catch (InputMismatchException ime) {
-				this.scanner.nextLine();
+				this.scanner.next();
 			}
 		}
 	}
@@ -107,7 +107,7 @@ public class BrokerHandler {
 				}
 				rSet.beforeFirst();
 			} catch (InputMismatchException ime) {
-				this.scanner.nextLine();
+				this.scanner.next();
 			}
 		}
 	}

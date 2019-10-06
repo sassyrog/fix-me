@@ -112,11 +112,11 @@ public class Auth {
 					return this.username;
 				} else {
 					System.out.println("\nCould not login. Please make sure username and password are correct");
-					this.login();
+					return this.login();
 				}
 			} else {
 				System.out.println("\nCould not find username. Please make sure username is correct");
-				this.login();
+				return this.login();
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
