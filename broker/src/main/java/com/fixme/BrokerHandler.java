@@ -61,15 +61,15 @@ public class BrokerHandler {
 		int id = inputID();
 		int quantity = inputQuantity(id);
 		int targetMarket = inputTargetMarket(id);
-
-		System.out.println("(((((" + targetMarket);
+		int instType = inputInstrumentType(id);
+		float instPrice = inputInstrumentPrice(id);
 
 		System.out.printf("Are all purchase details above correct? (y|n) : ");
 
 		String correct = this.scanner.next().trim();
 
 		if (correct.equals("y") || correct.equals("Y")) {
-			return fix.encode(id, quantity, 1, targetMarket);
+			return fix.encode(clientID, id, quantity, 1, targetMarket, instType, instPrice);
 		} else {
 			processBuy();
 		}
@@ -121,18 +121,17 @@ public class BrokerHandler {
 		ResultSet rrSet = this.conn.query("SELECT inst_ma_id FROM instruments WHERE inst_id = " + id);
 		rrSet.next();
 		return rrSet.getInt("inst_ma_id");
-		// while (true) {
-		// try {
-		// while (this.rSet.next()) {
-		// if (this.rSet.getInt("ID") == id) {
-		// rSet.beforeFirst();
-		// return market;
-		// }
-		// }
-		// rSet.beforeFirst();
-		// } catch (InputMismatchException ime) {
-		// this.scanner.next();
-		// }
-		// }
+	}
+
+	public int inputInstrumentType(int id) throws SQLException {
+		ResultSet rrSet = this.conn.query("SELECT inst_no FROM instruments WHERE inst_id = " + id);
+		rrSet.next();
+		return rrSet.getInt("inst_no");
+	}
+
+	public float inputInstrumentPrice(int id) throws SQLException {
+		ResultSet rrSet = this.conn.query("SELECT inst_price FROM instruments WHERE inst_id = " + id);
+		rrSet.next();
+		return rrSet.getFloat("inst_price");
 	}
 }
