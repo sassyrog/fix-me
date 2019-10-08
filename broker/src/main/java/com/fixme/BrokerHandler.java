@@ -38,7 +38,7 @@ public class BrokerHandler {
 				if (rSet.isBeforeFirst()) {
 					DBTablePrinter.printResultSet(rSet);
 					rSet.beforeFirst();
-					return processBuy();
+					return processBuy(avMarkets.split("|")[1]);
 				} else {
 					Colour.out.red("No instruments to buy!!!\n");
 				}
@@ -56,7 +56,7 @@ public class BrokerHandler {
 		return "blah";
 	}
 
-	public String processBuy() throws SQLException {
+	public String processBuy(String maIDs) throws SQLException {
 		System.out.println("Please choose the instrument you want to buy");
 
 		int id = inputID();
@@ -72,7 +72,7 @@ public class BrokerHandler {
 		if (correct.equals("y") || correct.equals("Y")) {
 			return fix.encode(clientID, id, quantity, 1, targetMarket, instType, instPrice);
 		} else {
-			processBuy();
+			processBuy(maIDs);
 		}
 		return "";
 	}
