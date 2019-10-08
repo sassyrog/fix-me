@@ -216,18 +216,24 @@ public class RouterServer {
 
 	public String getAvailableMarkets() {
 		List<String> ids = new ArrayList<String>();
+		List<String> clids = new ArrayList<String>();
 		for (String key : this.markets.keySet()) {
 			HashMap<String, SocketChannel> gg = markets.get(key);
 			try {
 				ByteBuffer bb = ByteBuffer.allocate(15);
 				bb.flip();
+
 				socketWrite("connection test", gg.get(gg.keySet().stream().findFirst().get()), bb);
 				ids.add(key);
+				clids.add(gg.keySet().stream().findFirst().get());
+
 			} catch (IOException e) {
 				markets.remove(key);
 			}
 		}
-		return String.join(",", ids);
+		String retIds = String.join(",", ids);
+		String retClids = String.join(",", clids);
+		return retIds + "|" + retClids;
 	}
 
 	public void socketWrite(String msg, SocketChannel sc, ByteBuffer bb) throws IOException {
