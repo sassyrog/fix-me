@@ -229,6 +229,7 @@ public class RouterServer {
 
 			} catch (IOException e) {
 				markets.remove(key);
+				return getAvailableMarkets();
 			}
 		}
 		String retIds = String.join(",", ids);
