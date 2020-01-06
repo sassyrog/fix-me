@@ -20,14 +20,15 @@ public final class MysqlConnect {
 	private MysqlConnect() {
 		String url = "";
 
-		if (System.getenv("USER").equals("rmdaba")) {
-			url = "jdbc:mysql://192.168.99.100:3306/fixme";
-		} else {
-			url = "jdbc:mysql://localhost:3306/fixme";
-		}
+		// if (System.getenv("USER").equals("rmdaba")) {
+		// System.out.println("here!!!!!!!!!!!!!!!!!");
+		// url = "jdbc:mysql://192.168.99.100:3306/fixme";
+		// } else {
+		// }
+		url = "jdbc:mysql://localhost:3306/fixme";
 
 		// String dbName = "database_name";
-		String driver = "com.mysql.jdbc.Driver";
+		String driver = "com.mysql.cj.jdbc.Driver";
 		String userName = "root";
 		String password = "Rootroot3";
 		try {

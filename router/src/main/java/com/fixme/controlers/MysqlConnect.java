@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Properties;
 
 /**
  * MysqlConnect
@@ -25,12 +26,17 @@ public final class MysqlConnect {
 		}
 
 		// String dbName = "database_name";
-		String driver = "com.mysql.jdbc.Driver";
-		String userName = "root";
-		String password = "Rootroot3";
+		Properties properties = new Properties();
+		properties.setProperty("user", "root");
+		properties.setProperty("password", "Rootroot3");
+		properties.setProperty("useSSL", "false");
+		properties.setProperty("autoReconnect", "true");
+
+		String driver = "com.mysql.cj.jdbc.Driver";
+
 		try {
 			Class.forName(driver).newInstance();
-			this.conn = (Connection) DriverManager.getConnection(url, userName, password);
+			this.conn = (Connection) DriverManager.getConnection(url, properties);
 			System.out.println("Connection created!");
 		} catch (Exception e) {
 			e.printStackTrace();
