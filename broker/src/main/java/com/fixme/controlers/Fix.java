@@ -35,4 +35,8 @@ public class Fix {
 		}
 		return String.format("%03d", (n % 256));
 	}
+
+	public String decode(String fixMessage) {
+		return "";
+	}
 }
