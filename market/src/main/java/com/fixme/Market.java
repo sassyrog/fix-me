@@ -60,7 +60,7 @@ public class Market {
 		return this.auth;
 	}
 
-	// main market method
+	// main market syncronous socket method
 	public void marketNIO() {
 		try {
 			ResultSet rSet = conn.query("SELECT ma_id FROM markets WHERE ma_username = '" + this.username + "'");
