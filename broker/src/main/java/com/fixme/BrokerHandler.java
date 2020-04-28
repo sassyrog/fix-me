@@ -31,7 +31,7 @@ public class BrokerHandler {
 		try {
 			String avMarkets = broker.getResponseFromServer("markets").trim();
 			System.out.println("::::: " + avMarkets + " :::::");
-			if (!avMarkets.equals("nada")) {
+			if (!avMarkets.equals("nada") && !avMarkets.split("|")[0].equals("|")) {
 				String query = "SELECT inst.inst_id AS 'ID', it.it_name AS 'Name', inst.inst_amount AS 'Quantity Available', ma.ma_name AS 'Market' FROM instruments inst INNER JOIN markets ma ON inst.inst_ma_id = ma.ma_id INNER JOIN instrument_types it ON it.it_no = inst.inst_no WHERE ma.ma_id IN ("
 						+ avMarkets.split("|")[0] + ")";
 				this.rSet = conn.query(query);

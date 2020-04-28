@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.nio.ByteBuffer;
+import java.nio.Buffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
@@ -68,9 +69,12 @@ public class RouterServer {
 					acceptConnection(sKey, s);
 				} else if (sKey.isReadable()) {
 					readWriteClient(sKey, s);
+				} else {
+					skIterator.remove();
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				skIterator.remove();
+				return;
 			}
 
 			skIterator.remove();
@@ -84,31 +88,31 @@ public class RouterServer {
 		sChannel.register(s, SelectionKey.OP_READ);
 
 		switch (sChannel.socket().getLocalPort()) {
-		case 5000: {
-			TimeMessage.print("Broker connection!!!");
-			break;
-		}
-		case 5001:
-			TimeMessage.print("Market connection!!!");
-			break;
+			case 5000: {
+				TimeMessage.print("Broker connection!!!");
+				break;
+			}
+			case 5001:
+				TimeMessage.print("Market connection!!!");
+				break;
 		}
 	}
 
 	public void readWriteClient(SelectionKey sKey, Selector s) throws IOException {
 		SocketChannel sChannel = (SocketChannel) sKey.channel();
 		ByteBuffer cBuffer = ByteBuffer.allocate(1000);
-		cBuffer.flip();
-		cBuffer.clear();
+		((Buffer) cBuffer).flip();
+		((Buffer) cBuffer).clear();
 
 		switch (sChannel.socket().getLocalPort()) {
-		case 5000:
-			processBrokerToMarket(cBuffer, sChannel);
-			sChannel.register(s, SelectionKey.OP_READ);
-			break;
-		case 5001:
-			processMarket(cBuffer, sChannel);
-			sChannel.register(s, SelectionKey.OP_READ);
-			break;
+			case 5000:
+				processBrokerToMarket(cBuffer, sChannel);
+				sChannel.register(s, SelectionKey.OP_READ);
+				break;
+			case 5001:
+				processMarket(cBuffer, sChannel);
+				sChannel.register(s, SelectionKey.OP_READ);
+				break;
 		}
 	}
 
@@ -117,7 +121,7 @@ public class RouterServer {
 		int count = sc.read(cBuffer);
 
 		if (count > 0) {
-			cBuffer.flip();
+			((Buffer) cBuffer).flip();
 			clientString = Charset.forName("UTF-8").decode(cBuffer).toString().trim();
 			// TimeMessage.print(clientString);
 			if (Pattern.matches("new=\\d", clientString)) {
@@ -150,7 +154,7 @@ public class RouterServer {
 		// if (this.marketChannel.isConnected()) {
 		int count = sc.read(cBuffer);
 		if (count > 0) {
-			cBuffer.flip();
+			((Buffer) cBuffer).flip();
 			clientString = Charset.forName("UTF-8").decode(cBuffer).toString();
 			if (Pattern.matches("new=\\d", clientString)) {
 				Long id = this.nextID();
@@ -166,10 +170,10 @@ public class RouterServer {
 
 	public String broadcast(String msg, SocketChannel channel) throws IOException {
 		ByteBuffer bb = ByteBuffer.allocate(1000);
-		bb.flip();
-		bb.clear();
+		((Buffer) bb).flip();
+		((Buffer) bb).clear();
 		bb.put(msg.getBytes());
-		bb.flip();
+		((Buffer) bb).flip();
 		channel.write(bb);
 
 		Selector selector = Selector.open();
@@ -182,8 +186,8 @@ public class RouterServer {
 						SelectionKey sk = i.next();
 						if (sk.isReadable()) {
 							SocketChannel mChannel = (SocketChannel) sk.channel();
-							bb.flip();
-							bb.clear();
+							((Buffer) bb).flip();
+							((Buffer) bb).clear();
 
 							int count = mChannel.read(bb);
 							if (count > 0) {
@@ -195,7 +199,8 @@ public class RouterServer {
 						}
 						i.remove();
 					} catch (IOException e) {
-						e.printStackTrace();
+						System.out.println("++++++++++++++++++++++++++++++++++++");
+						// e.printStackTrace();
 					}
 				}
 			}
@@ -221,7 +226,7 @@ public class RouterServer {
 			HashMap<String, SocketChannel> gg = markets.get(key);
 			try {
 				ByteBuffer bb = ByteBuffer.allocate(15);
-				bb.flip();
+				((Buffer) bb).flip();
 
 				socketWrite("connection test", gg.get(gg.keySet().stream().findFirst().get()), bb);
 				ids.add(key);
@@ -238,10 +243,10 @@ public class RouterServer {
 	}
 
 	public void socketWrite(String msg, SocketChannel sc, ByteBuffer bb) throws IOException {
-		bb.flip();
-		bb.clear();
+		((Buffer) bb).flip();
+		((Buffer) bb).clear();
 		bb.put(msg.getBytes());
-		bb.flip();
+		((Buffer) bb).flip();
 		bb.rewind();
 		sc.write(bb);
 	}

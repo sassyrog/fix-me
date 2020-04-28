@@ -3,6 +3,7 @@ package com.fixme;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
+import java.nio.Buffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
@@ -96,10 +97,10 @@ public class Market {
 				System.out.println("connecting to server");
 			String req = "new=" + this.id;
 
-			this.cBuffer.flip();
-			this.cBuffer.clear();
+			((Buffer) this.cBuffer).flip();
+			((Buffer) this.cBuffer).clear();
 			this.cBuffer.put(req.getBytes());
-			this.cBuffer.flip();
+			((Buffer) this.cBuffer).flip();
 			sc.write(cBuffer);
 
 			Selector selector = Selector.open();
@@ -135,24 +136,24 @@ public class Market {
 	public void serverReadWrite(SelectionKey sKey) throws IOException {
 		SocketChannel sChannel = (SocketChannel) sKey.channel();
 
-		cBuffer.flip();
-		cBuffer.clear();
+		((Buffer) cBuffer).flip();
+		((Buffer) cBuffer).clear();
 
 		int count = sChannel.read(cBuffer);
 
 		if (count > 0) {
-			cBuffer.flip();
+			((Buffer) cBuffer).flip();
 			String input = Charset.forName("UTF-8").decode(cBuffer).toString();
 			System.out.println("server msg : " + input);
 			if (Pattern.matches("connected=\\d{6}$", input)) {
 				this.clientID = input.split("=")[1];
 				System.out.println("=====> " + this.clientID);
 			} else {
-				cBuffer.flip();
-				cBuffer.clear();
+				((Buffer) cBuffer).flip();
+				((Buffer) cBuffer).clear();
 				cBuffer.put("something from the Market".getBytes());
-				cBuffer.flip();
-				cBuffer.rewind();
+				((Buffer) cBuffer).flip();
+				// cBuffer.rewind();
 				sChannel.write(cBuffer);
 			}
 			// sChannel.close();

@@ -25,7 +25,7 @@ public final class MysqlConnect {
 		// url = "jdbc:mysql://192.168.99.100:3306/fixme";
 		// } else {
 		// }
-		url = "jdbc:mysql://localhost:3306/fixme";
+		url = "jdbc:mysql://localhost:3306/fixme?useSSL=false";
 
 		// String dbName = "database_name";
 		String driver = "com.mysql.cj.jdbc.Driver";

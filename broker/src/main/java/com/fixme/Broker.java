@@ -3,6 +3,7 @@ package com.fixme;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
+import java.nio.Buffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
@@ -96,10 +97,10 @@ public class Broker {
 	}
 
 	public String getResponseFromServer(String request) throws IOException {
-		this.bb.flip();
-		this.bb.clear();
+		((Buffer) this.bb).flip();
+		((Buffer) this.bb).clear();
 		this.bb.put(request.getBytes());
-		this.bb.flip();
+		((Buffer) this.bb).flip();
 		this.sChannel.write(bb);
 		Selector selector = Selector.open();
 		this.sChannel.register(selector, SelectionKey.OP_READ);
@@ -121,11 +122,11 @@ public class Broker {
 				SelectionKey sk = i.next();
 				if (sk.isReadable()) {
 					SocketChannel sc = (SocketChannel) sk.channel();
-					bb.flip();
-					bb.clear();
+					((Buffer) bb).flip();
+					((Buffer) bb).clear();
 					count = sc.read(bb);
 					if (count > 0) {
-						bb.flip();
+						((Buffer) bb).flip();
 						String response = Charset.forName("UTF-8").decode(bb).toString().trim();
 						if (Pattern.matches("connected=\\d{6}$", response))
 							this.clientID = response.split("=")[1];

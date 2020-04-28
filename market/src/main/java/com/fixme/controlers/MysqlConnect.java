@@ -20,11 +20,11 @@ public final class MysqlConnect {
 	private MysqlConnect() {
 		String url = "";
 
-		if (System.getenv("USER").equals("rmdaba")) {
-			url = "jdbc:mysql://192.168.99.100:3306/fixme";
-		} else {
-			url = "jdbc:mysql://localhost:3306/fixme";
-		}
+		// if (System.getenv("USER").equals("rmdaba")) {
+		// url = "jdbc:mysql://192.168.99.100:3306/fixme";
+		// } else {
+		url = "jdbc:mysql://localhost:3306/fixme?useSSL=false";
+		// }
 
 		// String dbName = "database_name";
 		String driver = "com.mysql.cj.jdbc.Driver";
