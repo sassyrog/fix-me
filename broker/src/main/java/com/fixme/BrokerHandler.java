@@ -38,7 +38,9 @@ public class BrokerHandler {
 				if (rSet.isBeforeFirst()) {
 					DBTablePrinter.printResultSet(rSet);
 					rSet.beforeFirst();
-					return processBuy(avMarkets.split("|")[1]);
+					System.out.println(processBuy(avMarkets.split("|")[1]));
+					return "";
+					// return processBuy(avMarkets.split("|")[1]);
 				} else {
 					Colour.out.red("No instruments to buy!!!\n");
 				}
