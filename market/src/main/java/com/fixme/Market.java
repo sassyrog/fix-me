@@ -52,26 +52,6 @@ public class Market {
 			market.setUsername(valid);
 			Colour.out.green("\n\tThis market is now logged in\n");
 			market.marketNIO();
-
-			// Colour.out.green("\n\tYou are now logged in\n");
-			// try {
-			// broker.createConnection();
-			// while (true) {
-			// System.out.print("Instruction (buy|sell) : ");
-			// String instr = scn.nextLine().trim();
-			// if (instr.trim().equalsIgnoreCase("buy")) {
-			// BrokerHandler.brokerBuy();
-			// } else if (instr.trim().equalsIgnoreCase("sell")) {
-			// BrokerHandler.brokerSell();
-			// } else {
-			// System.out.println("Invalid instruction");
-			// }
-
-			// broker.getResponseFromServer(scn.nextLine().trim());
-			// }
-			// } catch (IOException e) {
-			// e.printStackTrace();
-			// }
 		}
 		scn.close();
 	}
