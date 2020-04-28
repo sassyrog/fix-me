@@ -23,6 +23,7 @@ public class Fix {
 		fixString += fixString2;
 		fixString += "10=" + checksum(fixString) + "|";
 
+		// need to revisist this
 		return fixString;
 	}
 
